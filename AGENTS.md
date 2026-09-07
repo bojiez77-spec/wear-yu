@@ -177,3 +177,9 @@ This specific authority split supersedes any earlier blanket final-approval word
 - Connect social services only (Instagram and Threads). Shopee listing is manual: after GM approval and all data/finance checks, generate and deliver Excel for staff to upload. Do not require Shopee API access or seller login to complete Excel delivery.
 - Excel delivery and actual listing are distinct; never report a download as a listed product.
 - Codex connector access is separate from the deployed website integration. Confirm actual website authorization and provider receipts before marking that integration complete.
+
+## 15. Shopee Round01 strict official recovery lineage
+- Before generating or modifying a Shopee bulk-upload workbook, Codex MUST read `docs/ROUND01_STRICT_OFFICIAL_RECOVERY_PROCESS.md` in addition to this file.
+- That document records the recoverable process that produced `wear_yu_Round01_AUTO_V1_4_STRICT_OFFICIAL_RECOVERY.xlsx`: sourcing -> Master Data -> official Basic Template mapping -> category/leaf-node corrections -> Cloudinary size-chart Secure URLs -> 14-day fulfillment policy -> AUTO V1 experiments -> strict restoration of the official workbook structure.
+- Reuse the controls and validation sequence, not the historical Round01 prices or unverified historical product claims.
+- The durable rule is: use the current official Shopee workbook as the mother template, write verified data into it, preserve official/hidden/reference sheets and field order, BLOCK unknown mandatory values, validate exact-SKU images/URLs/SKUs/categories/finance before export, and keep `Excel Ready` separate from actual Shopee listing status.
