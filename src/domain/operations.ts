@@ -11,10 +11,20 @@ export type Audit = { id: string; caseId: string; title: string; finding: string
 export type Workspace = { batches: Batch[]; cases: WorkCase[]; decisions: Decision[]; audits: Audit[] };
 export const emptyWorkspace = (): Workspace => ({ batches: [], cases: [], decisions: [], audits: [] });
 export const stepLabels: Record<Kind, string[]> = {
-  選品款式: ['挑選款式', '確認樣品', '搭配評估'],
-  社群內容: ['內容構思', '視覺製作', '加入好友引導'],
-  穿搭短影片: ['穿搭腳本', '拍攝剪輯', '上架前確認'],
-  穿搭示意圖: ['搭配提案', '示意圖製作', '上架前確認'],
+  選品款式: ['淘寶找款', '商品與來源核實', '搭配評估'],
+  社群內容: ['熱門樣式與文案查核', '品牌原創製作', '加入好友引導'],
+  穿搭短影片: ['熱門穿搭參考', '原創拍攝剪輯', '商品一致性確認'],
+  穿搭示意圖: ['熱門搭配參考', '品牌示意圖製作', '商品一致性確認'],
+};
+export const sourceBriefs: Record<Team, { summary: string; rules: string[] }> = {
+  選品組: {
+    summary: '淘寶找貨 · 核實款式與採購成本',
+    rules: ['保存淘寶商品連結、店鋪與確切 SKU，核對顏色、尺寸、庫存及實際採購成本。', '參考圖與商品原圖分開；熱門程度不能取代查重、氣候適配與財務查核。'],
+  },
+  視覺組: {
+    summary: '近期熱門穿搭與文案 → Wear-Yu 原創內容',
+    rules: ['優先查核近 7 天的穿搭與文案；樣本不足再看近 30 天，清楚標示期間與受眾。', '參考 Instagram、Threads、小紅書公開內容與 TikTok Creative Center；保留原文連結、發佈日期、查核時間及可見互動數據。', '只在同平台、同期間、同類型的已查核樣本中比較熱度；缺數據即待查核，不宣稱全網最高。', '提取開場、構圖與穿搭思路，重寫品牌文案並製作原創素材；保留已核准三段式品牌形象，商品素材須符合實際款式。'],
+  },
 };
 export const progress = (item: WorkCase) => Math.round(item.steps.filter(s => s.done).length / item.steps.length * 100);
 export const hasOpenFinding = (state: Workspace, id: string) => state.audits.some(a => a.caseId === id && a.finding && !a.resolved);
@@ -117,10 +127,10 @@ export type Batch = { id: string; name: string; mode: 'live' | 'demo'; gate: num
 export function createBatch(id: string, number: number, demo: boolean): { batch: Batch; cases: WorkCase[] } {
   const name = `第 ${String(number).padStart(2, '0')} 批次`;
   const definitions: { suffix: string; kind: Kind; title: string; detail: string }[] = [
-    { suffix: 's', kind: '選品款式', title: '候選款式搜尋', detail: '查重、氣候適配，至少一件短袖；不硬湊候選。' },
-    { suffix: 'social', kind: '社群內容', title: '社群與好友引導', detail: '定期內容規劃，吸引停留並引導加入好友。' },
-    { suffix: 'video', kind: '穿搭短影片', title: '上架前穿搭短影片', detail: '候選成熟後，由 GM 派交視覺組。' },
-    { suffix: 'image', kind: '穿搭示意圖', title: '搭配圖與尺寸表', detail: '候選成熟後，製作搭配示意及尺寸資料。' },
+    { suffix: 's', kind: '選品款式', title: '淘寶候選款式搜尋', detail: '淘寶找貨、查重與來源核實；符合氣候，至少一件短袖，不硬湊候選。' },
+    { suffix: 'social', kind: '社群內容', title: '社群與好友引導', detail: '參考近期熱門樣式與文案，轉成品牌原創內容，吸引停留與加入好友。' },
+    { suffix: 'video', kind: '穿搭短影片', title: '上架前穿搭短影片', detail: '候選成熟後，參考熱門穿搭節奏，原創製作符合實際商品的短片。' },
+    { suffix: 'image', kind: '穿搭示意圖', title: '搭配圖與尺寸表', detail: '參考熱門搭配呈現，依實際商品製作示意圖與尺寸資料。' },
   ];
   return {
     batch: { id, name, mode: demo ? 'demo' : 'live', gate: 0, status: demo ? '執行中' : '待接通', reason: '', events: [`董事長發起${name}`, 'GM 已建立制度工作佇列', demo ? '示範引擎開始演練' : '待接通找貨與製作執行服務，尚未實際執行'] },

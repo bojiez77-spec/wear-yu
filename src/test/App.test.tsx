@@ -13,7 +13,7 @@ describe('chairman batch interface', () => {
     expect(screen.getByRole('button', { name: '本批次處理中' })).toBeDisabled();
     expect(screen.getByText(/執行服務尚未接通/)).toBeInTheDocument();
     await user.click(screen.getByRole('link', { name: '選品 Sourcing' }));
-    expect(screen.getByRole('heading', { name: '第 01 批次｜候選款式搜尋' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: '第 01 批次｜淘寶候選款式搜尋' })).toBeInTheDocument();
     expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: '新增作業' })).not.toBeInTheDocument();
     await user.click(screen.getByRole('link', { name: '視覺 Visual' }));

@@ -34,3 +34,11 @@ Vercel 使用 `pnpm build`，靜態輸出 `dist`；HashRouter 不需路由 rewri
 - `src/themes.css`、`src/operations.css`：雙色調、佈局及作業介面 RWD。
 
 本輪成果與驗證見 [董事長批次改版](docs/batch-update/README.md)。
+
+## 找貨與媒體參考來源
+
+新批次以淘寶作為找貨來源，保留商品連結、店鋪、SKU 與實際採購證據。媒體參考近期熱門穿搭與文案，優先近 7 天，不足時回看近 30 天；同平台、期間、內容類型內比較，保存來源、時間、可見數據，缺資料不宣稱最高熱度。參考內容轉為 Wear-Yu 原創，保留既有品牌視覺與實際商品一致性。
+
+這是批次工作規則，尚未串接淘寶或社群擷取／製作服務，不代表已取得熱門樣本或完成自動找貨。TikTok Top Ads 的可篩選範圍參考[官方說明](https://ads.tiktok.com/resources/help/article/how-to-use-the-top-ads-dashboard?lang=en)，其廣告樣本不等於全網自然內容排名。
+
+2026-09-07 驗證：build 通過、11 項測試通過。初次測試因候選標題新增「淘寶」而失敗，已同步測試預期並重跑通過；不影響正式站。
