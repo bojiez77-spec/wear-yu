@@ -1,3 +1,4 @@
+import { parsePacket, type DeliveryPacket } from './delivery';
 export type Team = '選品組' | '視覺組';
 export type Stage = '待接通' | '等待前關' | '進行中' | '待審批' | '已放行' | '已退回';
 export type Kind = '選品款式' | '社群內容' | '穿搭短影片' | '穿搭示意圖';
@@ -6,8 +7,11 @@ export type WorkCase = {
   steps: { label: string; done: boolean }[];
   detail: string; cadence: string; productId?: string;
 };
-export type Decision = { id: string; caseId: string; title: string; result: '放行' | '退回'; reason: string; time: string };
-export type Audit = { id: string; caseId: string; title: string; finding: string; resolved: boolean; time: string };
+export type Decision = { id: string; caseId: string; title: string; result: '放行' | '退回'; reason: string; time: string; defectType?: DefectType; department?: string };
+export const defectTypes = ['SKU／商品資料', '成本／財務', '圖片／素材', '文案／社群', '流程／系統'] as const;
+export type DefectType = typeof defectTypes[number];
+export type Capa = { defectType: DefectType; count: number; department: string; rootCause: string; corrective: string; preventive: string; review: '待調查' | '待複查' | 'PASS' | 'FAIL'; evidence: string };
+export type Audit = { id: string; caseId: string; title: string; finding: string; resolved: boolean; time: string; capa?: Capa };
 export type Workspace = { batches: Batch[]; cases: WorkCase[]; decisions: Decision[]; audits: Audit[] };
 export const emptyWorkspace = (): Workspace => ({ batches: [], cases: [], decisions: [], audits: [] });
 export const stepLabels: Record<Kind, string[]> = {
@@ -30,16 +34,38 @@ export const progress = (item: WorkCase) => Math.round(item.steps.filter(s => s.
 export const hasOpenFinding = (state: Workspace, id: string) => state.audits.some(a => a.caseId === id && a.finding && !a.resolved);
 export type Operation =
   | { type: 'launch'; id: string; demo: boolean }
+  | { type: 'packet'; id: string; text: string }
+  | { type: 'excel'; id: string; filename: string }
+  | { type: 'capa'; id: string; rootCause: string; corrective: string; preventive: string; review: Capa['review']; evidence: string }
   | { type: 'advance'; id: string }
-  | { type: 'batch-gm'; id: string; result: '放行' | '退回'; reason: string }
-  | { type: 'chairman'; id: string; result: '放行' | '退回'; reason: string }
+  | { type: 'batch-gm'; id: string; result: '放行' | '退回'; reason: string; defectType?: DefectType; department?: string }
+  | { type: 'chairman'; id: string; result: '放行' | '退回'; reason: string; defectType?: DefectType; department?: string }
   | { type: 'add'; item: WorkCase }
   | { type: 'step'; id: string; index: number }
   | { type: 'submit'; id: string }
-  | { type: 'decide'; id: string; result: Decision['result']; reason: string; eventId: string; time: string }
-  | { type: 'audit'; id: string; finding: string; eventId: string; time: string }
+  | { type: 'decide'; id: string; result: Decision['result']; reason: string; defectType?: DefectType; department?: string; eventId: string; time: string }
+  | { type: 'audit'; id: string; finding: string; defectType?: DefectType; department?: string; eventId: string; time: string }
   | { type: 'resolve'; id: string };
-export function operationsReducer(state: Workspace, action: Operation): Workspace {
+function baseReducer(state: Workspace, action: Operation): Workspace {
+  if (action.type === 'capa') {
+    if (!action.rootCause.trim() || !action.corrective.trim() || !action.preventive.trim() || (action.review === 'PASS' && !action.evidence.trim())) return state;
+    return { ...state, audits: state.audits.map(a => a.id === action.id && a.capa ? { ...a, resolved: action.review === 'PASS', capa: { ...a.capa, rootCause: action.rootCause.trim(), corrective: action.corrective.trim(), preventive: action.preventive.trim(), review: action.review, evidence: action.evidence.trim() } } : a) };
+  }
+  if (action.type === 'packet' || action.type === 'excel') {
+    const batch = state.batches.find(b => b.id === action.id);
+    if (!batch || batch.mode !== 'live') return state;
+    if (action.type === 'excel') {
+      if (!batch.gmApproved || !batch.packet || batch.listingStatus === 'BLOCK' || !action.filename.trim() || state.audits.some(a => !a.resolved && (a.caseId === batch.id || state.cases.some(c => c.id === a.caseId && c.batchId === batch.id)))) return state;
+      return { ...state, batches: state.batches.map(b => b.id === batch.id ? { ...b, listingStatus: 'EXCEL_READY', events: [...b.events, `Excel 已產製供下載：${action.filename}；尚無上傳回執`] } : b) };
+    }
+    if (batch.gmApproved && batch.packet?.social && batch.socialStatus !== 'RETURNED') return state;
+    try {
+      const packet = parsePacket(action.text);
+      // Social corrections cannot alter a product revision already approved by GM.
+      if (batch.gmApproved && JSON.stringify(packet.products) !== JSON.stringify(batch.packet?.products)) return state;
+      return { ...state, batches: state.batches.map(b => b.id === batch.id ? { ...b, packet, gate: batch.gmApproved ? 8 : 7, status: batch.gmApproved ? (packet.social ? '待董事長核決' : '已放行') : '待 GM 審核', socialStatus: packet.social ? 'REVIEW' : undefined, events: [...b.events, '已匯入部門驗證資料；財務計算 PASS'] } : b), cases: state.cases.map(c => c.batchId === batch.id && (c.kind === '社群內容' ? !!packet.social : c.kind === '選品款式' && !batch.gmApproved) ? { ...c, stage: '待審批', steps: c.steps.map(s => ({ ...s, done: true })) } : c) };
+    } catch { return state; }
+  }
   if (action.type === 'launch') {
     if (state.batches.some(b => b.status !== '已放行')) return state;
     const next = createBatch(action.id, state.batches.length + 1, action.demo);
@@ -48,8 +74,9 @@ export function operationsReducer(state: Workspace, action: Operation): Workspac
   if (action.type === 'advance' || action.type === 'batch-gm' || action.type === 'chairman') {
     const batch = state.batches.find(b => b.id === action.id);
     if (!batch) return state;
-    const blocked = state.audits.some(a => !a.resolved && a.finding && state.cases.some(c => c.id === a.caseId && c.batchId === batch.id));
+    const blocked = state.audits.some(a => !a.resolved && a.finding && (a.caseId === batch.id || state.cases.some(c => c.id === a.caseId && c.batchId === batch.id)));
     if (action.type === 'advance') {
+      if (batch.mode === 'demo' && batch.gmApproved && batch.socialStatus === 'RETURNED' && !blocked) return { ...state, batches: state.batches.map(b => b.id === batch.id ? { ...b, gate: 8, status: '待董事長核決', socialStatus: 'REVIEW' } : b) };
       if (batch.mode !== 'demo' || !['執行中', 'GM 改善中'].includes(batch.status) || blocked || batch.gate >= 7) return state;
       const gate = batch.gate + 1;
       const next: Batch = { ...batch, gate, status: gate === 7 ? '待 GM 審核' : '執行中', events: [...batch.events, `${gateDefinitions[batch.gate].name}：演練完成`] };
@@ -61,16 +88,17 @@ export function operationsReducer(state: Workspace, action: Operation): Workspac
     }
     if (blocked && action.result === '放行') return state;
     if (action.result === '退回' && !action.reason.trim()) return state;
+    if (action.type === 'batch-gm' && action.result === '放行' && batch.mode === 'live' && !batch.packet) return state;
     if (action.type === 'batch-gm' && batch.status !== '待 GM 審核') return state;
     if (action.type === 'chairman' && (batch.status !== '待董事長核決' || batch.gate !== 8)) return state;
     const actor = action.type === 'chairman' ? '董事長' : 'GM';
     const next: Batch = action.result === '退回'
-      ? { ...batch, status: 'GM 改善中', gate: 4, reason: action.reason.trim(), events: [...batch.events, `${actor}退回：${action.reason.trim()}`, 'GM 接手補正，重新進行視覺及後續控制'] }
-      : { ...batch, status: action.type === 'chairman' ? '已放行' : '待董事長核決', gate: 8, reason: '', events: [...batch.events, `${actor}放行${batch.mode === 'demo' ? '（演練）' : ''}`] };
-    return { ...state, batches: state.batches.map(b => b.id === batch.id ? next : b), cases: state.cases.map(c => c.batchId === batch.id ? { ...c, stage: action.result === '退回' ? '已退回' : '已放行' } : c), decisions: [{ id: `${batch.id}-${batch.events.length}`, caseId: batch.id, title: `${batch.name}｜${actor}核決`, result: action.result, reason: action.reason.trim(), time: batch.mode === 'demo' ? '演練紀錄' : new Date().toLocaleString('zh-TW') }, ...state.decisions] };
+      ? { ...batch, socialStatus: 'RETURNED', status: 'GM 改善中', gate: action.type === 'chairman' ? 7 : 4, reason: action.reason.trim(), events: [...batch.events, `${actor}退回：${action.reason.trim()}`, `${action.department || '視覺組'}接手補正，由 GM 追蹤` ] }
+      : { ...batch, gmApproved: true, listingStatus: batch.listingStatus || (batch.mode === 'demo' ? 'BLOCK' : 'READY'), socialStatus: action.type === 'chairman' ? 'BLOCK' : batch.packet?.social || batch.mode === 'demo' ? 'REVIEW' : undefined, publishJobs: action.type === 'chairman' && batch.mode === 'live' && batch.packet?.social ? batch.packet.social.platforms.map(platform => ({ id: `${batch.id}-${platform}-${batch.events.length}`, platform, status: 'BLOCK', reason: '發布服務未接通', payload: batch.packet!.social! })) : batch.publishJobs, status: action.type === 'chairman' || (batch.mode === 'live' && !batch.packet?.social) ? '已放行' : '待董事長核決', gate: 8, reason: '', events: [...batch.events, `${actor}放行${batch.mode === 'demo' ? '（演練）' : ''}`] };
+    return { ...state, batches: state.batches.map(b => b.id === batch.id ? next : b), cases: state.cases.map(c => c.batchId === batch.id && (batch.mode === 'demo' || c.kind === '社群內容' || c.kind === '選品款式') ? { ...c, stage: action.result === '退回' ? (action.type === 'chairman' && c.kind !== '社群內容' ? c.stage : '已退回') : c.kind === '社群內容' && action.type === 'batch-gm' ? (batch.packet?.social || batch.mode === 'demo' ? '待審批' : c.stage) : '已放行' } : c), decisions: [{ id: `${batch.id}-${batch.events.length}`, caseId: batch.id, title: `${batch.name}｜${actor}核決`, defectType: action.defectType, department: action.department, result: action.result, reason: action.reason.trim(), time: batch.mode === 'demo' ? '演練紀錄' : new Date().toLocaleString('zh-TW') }, ...state.decisions] };
   }
   if (action.type === 'add') return { ...state, cases: [...state.cases, action.item] };
-  if (action.type === 'resolve') return { ...state, audits: state.audits.map(a => a.id === action.id ? { ...a, resolved: true } : a) };
+  if (action.type === 'resolve') return { ...state, audits: state.audits.map(a => a.id === action.id && !a.capa ? { ...a, resolved: true } : a) };
   const item = state.cases.find(c => c.id === action.id);
   if (!item) return state;
   const replace = (next: WorkCase) => state.cases.map(c => c.id === item.id ? next : c);
@@ -83,10 +111,12 @@ export function operationsReducer(state: Workspace, action: Operation): Workspac
     return { ...state, cases: replace({ ...item, stage: '待審批' }) };
   }
   if (action.type === 'decide') {
+    if (item.batchId) return state; // A case-level decision must not bypass batch authority.
+
     if (item.stage !== '待審批' || (action.result === '退回' && !action.reason.trim()) || (action.result === '放行' && hasOpenFinding(state, item.id))) return state;
     return {
       ...state, cases: replace({ ...item, stage: action.result === '放行' ? '已放行' : '已退回' }),
-      decisions: [{ id: action.eventId, caseId: item.id, title: item.title, result: action.result, reason: action.reason.trim(), time: action.time }, ...state.decisions],
+      decisions: [{ id: action.eventId, caseId: item.id, title: item.title, defectType: action.defectType, department: action.department, result: action.result, reason: action.reason.trim(), time: action.time }, ...state.decisions],
     };
   }
   return { ...state, audits: [{ id: action.eventId, caseId: item.id, title: item.title, finding: action.finding.trim(), resolved: !action.finding.trim(), time: action.time }, ...state.audits] };
@@ -123,7 +153,7 @@ export const gateDefinitions = [
   { name: '必要稽核', owner: '稽核組' },
   { name: 'GM 最終審核', owner: '總經理' },
 ] as const;
-export type Batch = { id: string; name: string; mode: 'live' | 'demo'; gate: number; status: '待接通' | '執行中' | '待 GM 審核' | '待董事長核決' | '已放行' | 'GM 改善中'; reason: string; events: string[] };
+export type Batch = { id: string; name: string; mode: 'live' | 'demo'; gate: number; status: '待接通' | '執行中' | '待 GM 審核' | '待董事長核決' | '已放行' | 'GM 改善中'; reason: string; events: string[]; packet?: DeliveryPacket; gmApproved?: boolean; listingStatus?: 'READY' | 'EXCEL_READY' | 'BLOCK'; publishJobs?: { id: string; platform: 'instagram' | 'threads'; status: 'BLOCK'; reason: string; payload: NonNullable<DeliveryPacket['social']> }[]; socialStatus?: 'REVIEW' | 'RETURNED' | 'BLOCK' | 'PENDING' | 'PUBLISHED' };
 export function createBatch(id: string, number: number, demo: boolean): { batch: Batch; cases: WorkCase[] } {
   const name = `第 ${String(number).padStart(2, '0')} 批次`;
   const definitions: { suffix: string; kind: Kind; title: string; detail: string }[] = [
@@ -136,4 +166,27 @@ export function createBatch(id: string, number: number, demo: boolean): { batch:
     batch: { id, name, mode: demo ? 'demo' : 'live', gate: 0, status: demo ? '執行中' : '待接通', reason: '', events: [`董事長發起${name}`, 'GM 已建立制度工作佇列', demo ? '示範引擎開始演練' : '待接通找貨與製作執行服務，尚未實際執行'] },
     cases: definitions.map(d => ({ id: `${id}-${d.suffix}`, batchId: id, title: `${name}｜${d.title}`, team: d.kind === '選品款式' ? '選品組' : '視覺組', kind: d.kind, stage: !demo ? '待接通' : d.kind === '選品款式' || d.kind === '社群內容' ? '進行中' : '等待前關', steps: stepLabels[d.kind].map(label => ({ label, done: false })), detail: d.detail, cadence: d.kind === '社群內容' ? '定期發佈規劃' : '依批次制度推進' })),
   };
+}
+
+// Count structured categories across cases in the same department; each accepted event counts once.
+export function operationsReducer(state: Workspace, action: Operation): Workspace {
+  if ('eventId' in action && (state.decisions.some(d => d.id === action.eventId) || state.audits.some(a => a.id === action.eventId || a.id === `finding-${action.eventId}`))) return state;
+  const isReturn = (action.type === 'chairman' || action.type === 'batch-gm' || action.type === 'decide') && action.result === '退回';
+  const isFinding = action.type === 'audit' && !!action.finding.trim();
+  if ((isReturn || isFinding) && (!action.defectType || !defectTypes.includes(action.defectType) || !action.department?.trim())) return state;
+  const next = baseReducer(state, action);
+  if (next === state || !(isReturn || isFinding)) return next;
+  const defectType = action.defectType!; const department = action.department!.trim();
+  const count = next.decisions.filter(d => d.result === '退回' && d.defectType === defectType && d.department === department).length
+    + next.audits.filter(a => a.capa?.defectType === defectType && a.capa.department === department && a.id.startsWith('finding-')).length + (isFinding ? 1 : 0);
+  const caseId = action.id;
+  const finding = action.type === 'audit' ? action.finding : action.reason;
+  const eventKey = isFinding ? `finding-${action.eventId}` : `return-${next.decisions[0].id}`;
+  const capa: Capa = { defectType, department, count, rootCause: '', corrective: '', preventive: '', review: '待調查', evidence: '' };
+  // Every finding is tracked, and the second occurrence automatically starts CAPA.
+  if (isFinding) {
+    return { ...next, audits: next.audits.map(a => a.id === action.eventId ? { ...a, id: eventKey, capa } : a) };
+  }
+  if (count < 2) return next;
+  return { ...next, audits: [{ id: eventKey, caseId, title: `稽核介入：${defectType}（第 ${count} 次）`, finding, time: new Date().toISOString(), resolved: false, capa }, ...next.audits] };
 }

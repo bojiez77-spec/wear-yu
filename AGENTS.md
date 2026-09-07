@@ -161,3 +161,14 @@ After modifying the repository:
 5. If deployment is part of the task, do not call it complete until the URL is actually accessible and verified.
 
 Never invent status, SKU, inventory, costs, fees, margins, metrics, tests, commits, deployments, links, or successful integrations.
+
+## 13. Chairman policy update — 2026-09-07
+This specific authority split supersedes any earlier blanket final-approval wording:
+- GM approval of a verified product batch authorizes Codex to generate the batch's Shopee Excel and deliver/upload it through the established listing flow immediately. Do not request another Chairman approval for the same product revision. Product work must not wait for social content readiness.
+- Verify exact SKU, supplier cost, payment fee, freight, percentage/fixed Shopee fees, minimum net margin >=65%, exact-SKU images, inventory, sizes, listing fields and evidence before export. Never fill missing inputs with guesses. Respect the supplied Shopee template and its required/conditional fields; retain its metadata and sheets. Do not publish a shop-specific template or actual product packet into this public repository.
+- Social content completes internal review, then receives Chairman final release. Release immediately creates platform-specific publication jobs; only actual provider PUBLISHED evidence completes publication. Approval, queued, BLOCK, PENDING and Excel download are not publication/listing completion.
+- Chairman return requires a nonblank reason, structured defect category and responsible department. Route correction to that department under GM tracking. Social return preserves already-approved product data and Excel authority; changed product data requires a new product revision/batch review, never silently reuse approval.
+- The second accepted occurrence of the same defect category in the same department (including across cases) automatically involves Audit. Record category, count, department, root cause, corrective and preventive actions, review state and review evidence. Repeated defects cannot be closed through a one-click resolve action. Retain original decisions/findings after remediation.
+- UI must clearly separate GM product approval, Chairman social release, Chairman return with reason, Audit intervention, Excel readiness and actual provider publication state. Do not add approval layers.
+- Integrate existing flows. Run real build/tests and desktop/mobile browser checks. Report actual commit/deployment evidence and remaining external integration gaps.
+- Current implementation stores local browser records only. It is not a shared, authenticated approval system. Upload destinations and social provider adapters are not configured: publication jobs stay BLOCK. Never infer successful upload or publication from local records or a user's editable state. Do not expose credentials in browser storage, imports, logs, or repository files.

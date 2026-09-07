@@ -12,7 +12,7 @@ describe('approval invariants', () => {
   });
   it('prevents approval when a new audit finding exists and requires a return reason', () => {
     const initial = exampleWorkspace();
-    const audited = operationsReducer(initial, { type: 'audit', id: 'c1', finding: '尺寸未核對', eventId: 'new', time: 'now' });
+    const audited = operationsReducer(initial, { type: 'audit', id: 'c1', finding: '尺寸未核對', defectType: 'SKU／商品資料', department: '選品組', eventId: 'new', time: 'now' });
     expect(operationsReducer(audited, { type: 'decide', id: 'c1', result: '放行', reason: '', eventId: 'd', time: 'now' })).toBe(audited);
     expect(operationsReducer(initial, { type: 'decide', id: 'c1', result: '退回', reason: '  ', eventId: 'd', time: 'now' })).toBe(initial);
   });

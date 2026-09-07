@@ -21,8 +21,8 @@ export function CaseCard({ item }: { item: WorkCase }) {
       <div className="case-steps readonly-steps">{item.steps.map(step => <span key={step.label} className={step.done ? 'done' : ''}><Check size={14} />{step.label}</span>)}</div>
       {decision?.result === '退回' && item.stage === '已退回' && <p className="case-feedback">GM 退回：{decision.reason}</p>}
       {blocked && <p className="case-feedback">有稽核缺失待改善</p>}
-      {item.stage === '待審批' && <p className="subtle">已送交 GM，等待核決</p>}
-      {item.stage === '已放行' && <p className="approved-note"><Check size={15} />GM 已放行</p>}
+      {item.stage === '待審批' && <p className="subtle">{item.kind === '社群內容' ? '內部完成，等待董事長核決' : '已送交 GM，等待核決'}</p>}
+      {item.stage === '已放行' && <p className="approved-note"><Check size={15} />{item.kind === '社群內容' ? '董事長已放行 · 發布尚未完成' : 'GM 已批准'}</p>}
     </div>
   </article>;
 }

@@ -208,7 +208,7 @@ export default function Layout() {
             intentional.
           </span>
           <span>
-            本機暫存 · 重新整理清除 <ArrowUpRight size={12} />
+            本機保存 · 尚未跨裝置同步 <ArrowUpRight size={12} />
           </span>
         </footer>
       </div>
