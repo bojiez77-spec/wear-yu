@@ -171,8 +171,8 @@ export default function Dashboard({
               >
                 <defs>
                   <linearGradient id="chartFill" x1="0" y1="0" x2="0" y2="1">
-                    <stop stopColor="#7ca0b8" stopOpacity=".22" />
-                    <stop offset="1" stopColor="#7ca0b8" stopOpacity="0" />
+                    <stop stopColor="var(--blue)" stopOpacity=".22" />
+                    <stop offset="1" stopColor="var(--blue)" stopOpacity="0" />
                   </linearGradient>
                 </defs>
                 {[20, 60, 100, 140, 180].map((y) => (
@@ -192,7 +192,7 @@ export default function Dashboard({
                 <polyline
                   points={points}
                   fill="none"
-                  stroke="#8daec2"
+                  stroke="var(--blue)"
                   strokeWidth="2.5"
                   vectorEffect="non-scaling-stroke"
                 />
@@ -202,7 +202,7 @@ export default function Dashboard({
                     cx={index * 100}
                     cy={chartY(value)}
                     r="3.5"
-                    fill="#a6bdcb"
+                    fill="var(--blue)"
                   />
                 ))}
               </svg>

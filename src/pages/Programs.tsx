@@ -2,33 +2,40 @@ import { useState } from "react";
 import { CheckCircle2, Code2, Pause, Play, Terminal } from "lucide-react";
 import { Badge, PageHeading } from "../components/ui";
 import type { Workflow } from "../data/mock";
+import { executionPlans, executeMockWorkflow, type ExecutionPlan } from "../domain/workflows";
 
 export default function Programs({
   workflows,
   setWorkflows,
   logs,
   setLogs,
+  plans,
+  setPlans,
 }: {
   workflows: Workflow[];
   setWorkflows: React.Dispatch<React.SetStateAction<Workflow[]>>;
   logs: string[];
   setLogs: React.Dispatch<React.SetStateAction<string[]>>;
+  plans: Record<string, ExecutionPlan>;
+  setPlans: React.Dispatch<React.SetStateAction<Record<string, ExecutionPlan>>>;
 }) {
   const [message, setMessage] = useState("");
   function run(workflow: Workflow) {
     const time = new Date().toLocaleTimeString("zh-TW", { hour12: false });
+    const result = executeMockWorkflow(workflow, plans[workflow.id] ?? "daily", time);
+    if (!result) return;
     setWorkflows((current) =>
       current.map((item) =>
-        item.id === workflow.id ? { ...item, lastRun: `本次 ${time}` } : item,
+        item.id === workflow.id ? { ...item, lastRun: result.lastRun } : item,
       ),
     );
     setLogs((current) =>
       [
-        `${time}  ${workflow.name}完成 · ${workflow.records} 筆模擬資料`,
+        result.log,
         ...current,
       ].slice(0, 8),
     );
-    setMessage(`${workflow.name}：模擬執行完成。`);
+    setMessage(result.message);
   }
   return (
     <>
@@ -74,6 +81,18 @@ export default function Programs({
                 最近執行 {workflow.lastRun} <span>·</span> {workflow.records}{" "}
                 筆資料
               </small>
+              <div className="execution-plan">
+                <label>執行方案
+                  <select aria-label={`${workflow.name}執行方案`} value={plans[workflow.id] ?? "daily"}
+                    onChange={(event) => setPlans((current) => ({ ...current, [workflow.id]: event.target.value as ExecutionPlan }))}>
+                    {Object.entries(executionPlans).map(([value, plan]) => <option key={value} value={value}>{plan.name}</option>)}
+                  </select>
+                </label>
+                <p>{executionPlans[plans[workflow.id] ?? "daily"].description}</p>
+                <ol aria-label={`${workflow.name}方案步驟`}>
+                  {executionPlans[plans[workflow.id] ?? "daily"].steps.map((step) => <li key={step}>{step}</li>)}
+                </ol>
+              </div>
             </div>
             <div className="workflow-actions">
               <button

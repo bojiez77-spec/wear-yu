@@ -13,6 +13,22 @@ function setup(path = "/") {
   return userEvent.setup();
 }
 describe("Wear-Yu MVP flows", () => {
+  it("switches appearance without resetting work and preserves execution plans across pages", async () => {
+    const user = setup("/programs");
+    await user.selectOptions(screen.getByRole("combobox", { name: "外觀色調" }), "steel");
+    await user.selectOptions(screen.getByRole("combobox", { name: "頁面佈局" }), "focus");
+    expect(document.documentElement).toHaveAttribute("data-theme", "steel");
+    expect(document.documentElement).toHaveAttribute("data-layout", "focus");
+    await user.selectOptions(screen.getByRole("combobox", { name: "商品資料整理執行方案" }), "audit");
+    const card = screen.getByRole("heading", { name: "商品資料整理" }).closest("article")!;
+    expect(within(card).getAllByRole("listitem")).toHaveLength(4);
+    await user.click(within(card).getByRole("button", { name: "模擬執行" }));
+    expect(screen.getByRole("status")).toHaveTextContent("品質複核，4 個步驟已完成");
+    await user.click(screen.getByRole("link", { name: "選品 Sourcing" }));
+    await user.click(screen.getByRole("link", { name: "程式 Programs" }));
+    expect(screen.getByRole("combobox", { name: "商品資料整理執行方案" })).toHaveValue("audit");
+    expect(screen.getByRole("combobox", { name: "外觀色調" })).toHaveValue("steel");
+  });
   it("restores navigation focus and background scrolling when closing the current page", async () => {
     const user = setup();
     const menu = screen.getByRole("button", { name: "開啟選單" });
@@ -92,7 +108,7 @@ describe("Wear-Yu MVP flows", () => {
     await user.type(screen.getByRole("searchbox"), "不存在");
     expect(screen.getByText(/沒有符合條件的商品/)).toBeInTheDocument();
     await user.clear(screen.getByRole("searchbox"));
-    await user.selectOptions(screen.getByRole("combobox"), "price");
+    await user.selectOptions(screen.getByRole("combobox", { name: "商品排序" }), "price");
     expect(screen.getAllByRole("article")[0]).toHaveTextContent("霧藍落肩襯衫");
     await user.click(screen.getByRole("button", { name: "收藏霧藍落肩襯衫" }));
     await user.click(screen.getByRole("button", { name: /收藏清單/ }));

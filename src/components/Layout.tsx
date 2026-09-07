@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
+import { useAppearance, type Theme, type LayoutMode } from "../hooks/useAppearance";
 import {
   ArrowUpRight,
   Code2,
@@ -17,6 +18,7 @@ const links = [
   { to: "/sourcing", name: "選品", en: "Sourcing", icon: ShoppingBag },
 ];
 export default function Layout() {
+  const { theme, setTheme, layout, setLayout } = useAppearance();
   const [open, setOpen] = useState(false);
   const location = useLocation();
   const closeButton = useRef<HTMLButtonElement>(null);
@@ -40,7 +42,7 @@ export default function Layout() {
       }
       if (event.key === "Tab") {
         const items = document.querySelectorAll<HTMLElement>(
-          "#sidebar button, #sidebar nav a",
+          "#sidebar button, #sidebar nav a, #sidebar select",
         );
         const first = items[0];
         const last = items[items.length - 1];
@@ -140,6 +142,20 @@ export default function Layout() {
           ))}
         </nav>
         <div className="sidebar-bottom">
+          <div className="appearance-controls">
+            <label>外觀色調
+              <select value={theme} onChange={(event) => setTheme(event.target.value as Theme)}>
+                <option value="sky">霧天藍</option>
+                <option value="steel">深鋼藍</option>
+              </select>
+            </label>
+            <label>頁面佈局
+              <select value={layout} onChange={(event) => setLayout(event.target.value as LayoutMode)}>
+                <option value="studio">品牌工作室</option>
+                <option value="focus">專注工作台</option>
+              </select>
+            </label>
+          </div>
           <div className="studio-note">
             <p>讓好品味，成為好生意。</p>
             <small>Thoughtfully curated. Beautifully run.</small>
