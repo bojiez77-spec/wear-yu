@@ -75,7 +75,45 @@ Rules:
 - Product names containing "FS" may indicate FREAK'S STORE and should be actively checked, but brand identity must still be verified.
 - Current sourcing focus is primarily Taobao suppliers unless a newer Chairman instruction changes the sourcing channel.
 
-## 8. Chairman-facing reporting standard
+## 8. Finance / final pricing gate
+Finance (財務部) owns the final pricing Gate after the actual clothing acquisition cost has been verified.
+
+For every product, calculate the complete landed/selling cost using verified inputs:
+- actual Taobao / supplier clothing purchase cost;
+- Taobao overseas credit-card/payment handling fee;
+- international/cross-border shipping, consolidation, and applicable freight cost;
+- Shopee transaction/service/commission fees applicable to the sale.
+
+Current pricing policy:
+- The final selling price must produce a net profit margin of at least 65% after the above costs are included.
+- 65% is the current minimum threshold, not a permanent ceiling or fixed lifetime target.
+- As operating expenses increase (for example advertising, labor, warehousing, packaging, returns, tax, or other recurring overhead), Finance must reassess and may recommend increasing the required minimum margin.
+- Do not lower the 65% minimum without a newer Chairman instruction.
+
+Standard calculation:
+- Complete cost = purchase cost + overseas card/payment fee + freight + Shopee fees.
+- Net profit = final selling price - complete cost.
+- Net profit margin = net profit / final selling price.
+- Finance Gate PASS requires net profit margin >= 65% using verified cost inputs.
+
+Because Shopee fees may be calculated as a percentage of selling price rather than a fixed cost, Finance must solve the pricing equation using the actual applicable fee structure instead of blindly adding a guessed fixed fee.
+
+Finance reporting for each final-price decision must show:
+1. purchase cost;
+2. overseas card/payment fee;
+3. freight;
+4. Shopee fees and fee basis/rate;
+5. complete cost;
+6. proposed/final selling price;
+7. net profit amount;
+8. net profit margin;
+9. PASS or BLOCK.
+
+If the actual supplier purchase cost or another required cost input has not been verified, the Finance Gate is BLOCK and no value may be presented as a final selling price. Official Japanese retail price, reference price, or competitor price must never be substituted for actual Wear-Yu acquisition cost.
+
+This Finance Gate applies to approved products A and B and all future candidates/products.
+
+## 9. Chairman-facing reporting standard
 Chairman reports should contain only:
 - actual completed results;
 - major abnormalities;
@@ -84,19 +122,20 @@ Chairman reports should contain only:
 Do not fill Chairman reports with internal planning, role assignment, or production-in-progress language.
 If no Chairman decision is required, state that and continue execution under existing authority.
 
-## 9. Audit rules
+## 10. Audit rules
 Audit verifies evidence rather than accepting department self-declaration.
 - PASS requires verifiable evidence.
 - OPEN means required evidence or remediation remains incomplete.
 - Repeated defects require root-cause analysis and CAPA tracking.
 - A blocked dependency does not excuse inactivity on unrelated executable work.
 - Do not close integration work until the end-to-end result is verified.
+- Audit must verify Finance pricing evidence before accepting a final price as compliant.
 For deployment/integration closure, require at minimum:
 1. successful build/deployment evidence;
 2. actual accessible deployment URL;
 3. basic browser/runtime verification of critical UI and interactions.
 
-## 10. Wear-Yu software product direction
+## 11. Wear-Yu software product direction
 The application is an internal Wear-Yu GM / Executive Operations Command Center.
 Keep the dashboard focused on operational truth and rapid executive review.
 Preferred information hierarchy:
@@ -107,7 +146,7 @@ Preferred information hierarchy:
 - evidence and timestamps over narrative claims;
 - Chairman decision items only when genuinely required.
 
-## 11. Codex execution behavior
+## 12. Codex execution behavior
 Before modifying the repository:
 1. Read this AGENTS.md and the current repository state.
 2. Inspect existing implementation before proposing replacement architecture.
@@ -121,4 +160,4 @@ After modifying the repository:
 4. Report commit SHA and verification evidence.
 5. If deployment is part of the task, do not call it complete until the URL is actually accessible and verified.
 
-Never invent status, SKU, inventory, metrics, tests, commits, deployments, links, or successful integrations.
+Never invent status, SKU, inventory, costs, fees, margins, metrics, tests, commits, deployments, links, or successful integrations.
