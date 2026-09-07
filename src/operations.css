@@ -95,3 +95,40 @@ textarea:focus-visible, summary:focus-visible { outline: 2px solid var(--gold); 
   .breadcrumb > span { display: none; }
   .inline-form { padding: 18px; }
 }
+/* Hairlines use low-opacity strokes, not a reflective overlay. */
+.app-shell { background-image: repeating-linear-gradient(0deg, transparent 0 2px, color-mix(in srgb, var(--ink) 4%, transparent) 2px 3px, transparent 3px 5px); }
+.sidebar, .ops-section, .case-card, .approval-card { background-image: repeating-linear-gradient(0deg, transparent 0 2px, color-mix(in srgb, var(--ink) 4%, transparent) 2px 3px, transparent 3px 5px); }
+.ops-intro { background-image: repeating-linear-gradient(0deg, transparent 0 2px, color-mix(in srgb, var(--ink) 4%, transparent) 2px 3px, transparent 3px 5px), linear-gradient(120deg, var(--hero-start), var(--hero-end)); }
+
+.batch-launch { display: flex; flex-wrap: wrap; align-items: center; gap: 16px; }
+.batch-launch > span { font-size: 12px; color: var(--muted); line-height: 1.8; }
+.company-flow { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; margin: 26px 0; }
+.company-flow > div { border-top: 2px solid var(--line); padding-top: 15px; }
+.company-flow .complete { border-color: var(--gold); }
+.company-flow span { color: var(--gold-ink); font: 18px var(--serif); }
+.company-flow strong { display: block; margin-top: 10px; font-size: 13px; font-weight: 500; }
+.batch-state { font-size: 12px; color: var(--blue); }
+.batch-next { display: flex; gap: 12px; align-items: flex-start; margin-block: 20px; }
+.batch-next svg { flex-shrink: 0; margin-top: 3px; }
+.batch-next p { font-size: 13px; line-height: 1.8; color: var(--muted); }
+.batch-details { border-top: 1px solid var(--line); padding-top: 16px; font-size: 12px; }
+.batch-details summary { cursor: pointer; min-height: 32px; color: var(--blue); }
+.batch-details ol { list-style: none; padding: 0; }
+.batch-details li { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.batch-details small { display: block; margin-top: 5px; color: var(--muted); }
+.batch-details b { font-size: 11px; font-weight: 400; color: var(--blue); flex-shrink: 0; }
+.batch-events { padding-top: 15px; line-height: 2; color: var(--muted); }
+.work-auto-note { font-size: 13px; color: var(--muted); border-left: 2px solid var(--gold); padding-left: 14px; line-height: 1.8; }
+.readonly-steps > span { display: flex; align-items: center; gap: 10px; color: var(--muted); font-size: 13px; }
+.readonly-steps svg { opacity: .25; }
+.readonly-steps .done { color: var(--green); }
+.readonly-steps .done svg { opacity: 1; }
+@media (max-width: 720px) { .company-flow { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; } .batch-flow .panel-heading { flex-wrap: wrap; gap: 10px; } }
+
+.finance-policy { font-size: 12px; color: var(--gold-ink); line-height: 1.9; padding-block: 14px; }
+.approved-followups { margin-top: 24px; }
+.approved-followups h2 { font-size: 17px; margin-bottom: 12px; }
+.followup-row { border-top: 1px solid var(--line); margin-top: 18px; padding-top: 18px; }
+.followup-row strong { display: block; font-size: 14px; font-weight: 500; line-height: 1.6; overflow-wrap: anywhere; }
+.followup-row span { display: block; color: var(--blue); font-size: 11px; margin-block: 10px; }
+.followup-row p { color: var(--muted); font-size: 12px; line-height: 1.8; }
