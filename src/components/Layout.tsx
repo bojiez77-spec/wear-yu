@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
+import { useOperations } from "../hooks/useOperations";
 import { NavLink, Outlet, useLocation } from "react-router-dom";
 import { useAppearance, type Theme, type LayoutMode } from "../hooks/useAppearance";
 import {
   ArrowUpRight,
-  Code2,
+  ClipboardCheck,
+  ShieldCheck,
   LayoutDashboard,
   Menu,
   MessageCircle,
@@ -13,11 +15,13 @@ import {
 
 const links = [
   { to: "/", name: "總覽", en: "Dashboard", icon: LayoutDashboard },
-  { to: "/programs", name: "程式", en: "Programs", icon: Code2 },
-  { to: "/social", name: "社群", en: "Social", icon: MessageCircle },
   { to: "/sourcing", name: "選品", en: "Sourcing", icon: ShoppingBag },
+  { to: "/social", name: "視覺", en: "Visual", icon: MessageCircle },
+  { to: "/approvals", name: "審批", en: "Approvals", icon: ClipboardCheck },
+  { to: "/audit", name: "稽核", en: "Audit", icon: ShieldCheck },
 ];
 export default function Layout() {
+  const { demo, toggleDemo } = useOperations();
   const { theme, setTheme, layout, setLayout } = useAppearance();
   const [open, setOpen] = useState(false);
   const location = useLocation();
@@ -41,9 +45,9 @@ export default function Layout() {
         menuButton.current?.focus();
       }
       if (event.key === "Tab") {
-        const items = document.querySelectorAll<HTMLElement>(
-          "#sidebar button, #sidebar nav a, #sidebar select",
-        );
+        const items = Array.from(document.querySelectorAll<HTMLElement>(
+          "#sidebar button, #sidebar a, #sidebar select, #sidebar summary",
+        )).filter(item => item.getClientRects().length > 0);
         const first = items[0];
         const last = items[items.length - 1];
         if (event.shiftKey && document.activeElement === first) {
@@ -142,7 +146,7 @@ export default function Layout() {
           ))}
         </nav>
         <div className="sidebar-bottom">
-          <div className="appearance-controls">
+          <details className="appearance-settings"><summary>顯示與工具</summary><div className="appearance-controls">
             <label>外觀色調
               <select value={theme} onChange={(event) => setTheme(event.target.value as Theme)}>
                 <option value="sky">霧天藍</option>
@@ -156,6 +160,7 @@ export default function Layout() {
               </select>
             </label>
           </div>
+          <NavLink className="tool-link" to="/programs" onClick={() => setOpen(false)}>程式工具</NavLink></details>
           <div className="studio-note">
             <p>讓好品味，成為好生意。</p>
             <small>Thoughtfully curated. Beautifully run.</small>
@@ -188,9 +193,9 @@ export default function Layout() {
           </div>
           <div className="topbar-right">
             <span className="demo-indicator">
-              <span className="live-dot" /> MOCK DATA
+              {demo ? "示範案件" : "本次工作"}
             </span>
-            <span className="topbar-divider" />
+            <button className="quiet-button demo-toggle" onClick={toggleDemo}>{demo ? "退出示範" : "查看示範"}</button>
             <span className="mini-avatar">GM</span>
           </div>
         </div>
@@ -203,7 +208,7 @@ export default function Layout() {
             intentional.
           </span>
           <span>
-            MVP 0.1 <ArrowUpRight size={12} />
+            本機暫存 · 重新整理清除 <ArrowUpRight size={12} />
           </span>
         </footer>
       </div>

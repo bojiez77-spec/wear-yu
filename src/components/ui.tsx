@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { ArrowUpRight, Search, Shirt, ShoppingBag } from "lucide-react";
+import { Search, Shirt, ShoppingBag } from "lucide-react";
 import type { Product } from "../data/mock";
 
 export function Badge({
@@ -31,36 +31,6 @@ export function PageHeading({
       </div>
       {action}
     </header>
-  );
-}
-export function StatCard({
-  label,
-  value,
-  change,
-  icon,
-  note = "較上期",
-}: {
-  label: string;
-  value: string;
-  change: string;
-  icon: ReactNode;
-  note?: string;
-}) {
-  return (
-    <article className="stat-card panel">
-      <div className="stat-top">
-        <span>{label}</span>
-        <span className="stat-icon">{icon}</span>
-      </div>
-      <strong>{value}</strong>
-      <div className="stat-bottom">
-        <span>
-          <ArrowUpRight size={13} />
-          {change}
-        </span>
-        <small>{note}</small>
-      </div>
-    </article>
   );
 }
 export function EmptyState({ children, action }: { children: ReactNode; action?: ReactNode }) {
