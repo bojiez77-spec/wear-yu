@@ -11,8 +11,8 @@ export default function Dashboard() {
   const returned = state.batches.filter(b => b.status === 'GM 改善中');
   const findings = state.audits.filter(a => a.finding && !a.resolved);
   return <>
-    <PageHeading eyebrow="OPERATIONS AT A GLANCE" title="董事長工作台" description="發起批次，掌握進度，成熟後核決。" />
-    <section className="ops-intro compact-intro"><span className="eyebrow">CHAIRMAN COMMAND</span><h2>一次下令，各組依序接手。</h2><StartBatch />{!demo && !state.batches.length && <button className="text-link" onClick={toggleDemo}>先查看制度演練 <ArrowUpRight size={14} /></button>}</section>
+    <PageHeading eyebrow="THOUGHTFULLY CURATED · WEAR-YU" title="WEAR-YU｜品牌營運中心" description="以品味選物，以細節成就日常。" />
+    <section className="ops-intro compact-intro"><span className="eyebrow">THE NEXT COLLECTION</span><h2>讓好品味，從這裡開始。</h2><StartBatch />{!demo && !state.batches.length && <button className="text-link" onClick={toggleDemo}>先查看制度演練 <ArrowUpRight size={14} /></button>}</section>
     {!state.batches.length && <p className="empty-copy">尚未發起批次，不需人工新增選品或視覺作業。</p>}
     {state.batches.slice().reverse().map(batch => <div key={batch.id}><BatchFlow batch={batch} /><BatchDecision batch={batch} actor="董事長" /></div>)}
     <div className="ops-counters">{[

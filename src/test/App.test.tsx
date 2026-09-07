@@ -7,7 +7,7 @@ function setup() { render(<MemoryRouter><App /></MemoryRouter>); return userEven
 describe('chairman batch interface', () => {
   it('launches a batch once and automatically creates department work without fabricated completion', async () => {
     const user = setup();
-    expect(screen.getByRole('heading', { name: '董事長工作台' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'WEAR-YU｜品牌營運中心' })).toBeInTheDocument();
     expect(document.body.textContent).not.toMatch(/營業額|86,420|新增作業/);
     await user.click(screen.getByRole('button', { name: '發起新批次選品' }));
     expect(screen.getByRole('button', { name: '本批次處理中' })).toBeDisabled();
