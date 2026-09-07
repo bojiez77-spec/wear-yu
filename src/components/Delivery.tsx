@@ -22,7 +22,7 @@ export function BatchDelivery({ batch }: { batch: Batch }) {
       link.href = url; link.download = filename; link.click();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
       dispatch({ type: 'excel', id: batch.id, filename });
-      setNotice('Excel 已產製並提供下載；無上傳回執，尚未上架。');
+      setNotice('Excel 已產製並提供下載；請人工上傳蝦皮賣家中心，尚未上架。');
     } catch (e) { setNotice(`BLOCK：${e instanceof Error ? e.message : 'Excel 產製失敗'}`); }
     finally { setBusy(false); }
   }
@@ -34,7 +34,7 @@ export function BatchDelivery({ batch }: { batch: Batch }) {
       catch (error) { setNotice(`BLOCK：${error instanceof Error ? error.message : '資料格式錯誤'}`); }
     }} /></label>}
     <label>蝦皮空白上架範本<input type="file" accept=".xlsx" onChange={async e => { try { const file = e.target.files?.[0]; setTemplate(file ? await file.arrayBuffer() : null); } catch { setNotice("BLOCK：範本讀取失敗"); } }} /></label><button className="gold-button" disabled={!template || !batch.gmApproved || !batch.packet || batch.mode === 'demo' || blocked || busy} onClick={download}>{busy ? '產製中' : '產製／下載上架 Excel'}</button>
-    <p className="subtle">依您提供的蝦皮基本範本填入第 7 列起；上傳端點尚未接通。演練資料不可匯出為正式上架檔。</p>
+    <p className="subtle">依您提供的蝦皮基本範本填入第 7 列起；下載後由人員上傳蝦皮賣家中心。演練資料不可匯出為正式上架檔。</p>
     <BatchEvidence batch={batch} />
     {batch.publishJobs?.map(job => <p key={job.id}>{job.platform} · 發布佇列 {job.id} · {job.status}：{job.reason}</p>)}<p role="status">{notice}</p></section>;
 }

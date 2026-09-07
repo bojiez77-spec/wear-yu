@@ -24,7 +24,8 @@ The supplied sheet supports the four named delivery channels and has no per-cate
 ## Operational limits
 
 - No authenticated shared backend, durable server queue or roles exist in the current application. Browser storage is local convenience, not tamper-proof audit evidence.
-- No Shopee upload endpoint/account or social publication adapter is configured. Excel is generated for download; platform jobs remain BLOCK. There is no upload receipt or actual listing/publication proof.
+- Per the 2026-09-08 Chairman instruction, Shopee delivery is Excel download followed by manual upload in Seller Centre. Shopee API integration is out of scope; download is not actual listing.
+- The website social publication adapter is not configured; social jobs remain BLOCK. An available Codex Metricool connector does not automatically authorize the deployed website.
 - Production integration needs authenticated server-side role checks, immutable approved revisions, shared persistence, provider credentials held only server-side, idempotent uploads and polling/webhooks tied to approved revision + platform job IDs. PUBLISHED requires all requested platforms' actual provider evidence, not an approval or pending response.
 - Do not put live packets, account-specific templates or secrets in this public repository.
 
