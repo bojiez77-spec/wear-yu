@@ -13,6 +13,31 @@ function setup(path = "/") {
   return userEvent.setup();
 }
 describe("Wear-Yu MVP flows", () => {
+  it("restores navigation focus and background scrolling when closing the current page", async () => {
+    const user = setup();
+    const menu = screen.getByRole("button", { name: "開啟選單" });
+    await user.click(menu);
+    expect(document.body.style.overflow).toBe("hidden");
+    await user.click(screen.getByRole("link", { name: "總覽 Dashboard" }));
+    expect(menu).toHaveFocus();
+    expect(menu).toHaveAttribute("aria-expanded", "false");
+    expect(document.body.style.overflow).toBe("");
+    await user.click(menu);
+    await user.keyboard("{Escape}");
+    expect(menu).toHaveFocus();
+    expect(document.body.style.overflow).toBe("");
+  });
+  it("recovers from combined empty sourcing filters without losing bookmarks", async () => {
+    const user = setup("/sourcing");
+    await user.click(screen.getByRole("button", { name: "收藏霧藍落肩襯衫" }));
+    await user.click(screen.getByRole("button", { name: /收藏清單/ }));
+    await user.click(screen.getByRole("button", { name: "配件" }));
+    await user.type(screen.getByRole("searchbox"), "不存在");
+    await user.click(screen.getByRole("button", { name: "清除篩選，瀏覽全部商品" }));
+    expect(screen.getAllByRole("article")).toHaveLength(4);
+    expect(screen.getByRole("searchbox")).toHaveValue("");
+    expect(screen.getByRole("button", { name: "取消收藏霧藍落肩襯衫" })).toHaveAttribute("aria-pressed", "true");
+  });
   it("changes reporting period and preserves completed tasks across navigation", async () => {
     const user = setup();
     expect(screen.getAllByText("NT$ 86,420")).toHaveLength(2);

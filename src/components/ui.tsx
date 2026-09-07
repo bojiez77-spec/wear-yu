@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { ArrowUpRight, Check, Shirt, ShoppingBag } from "lucide-react";
+import { ArrowUpRight, Search, Shirt, ShoppingBag } from "lucide-react";
 import type { Product } from "../data/mock";
 
 export function Badge({
@@ -63,11 +63,12 @@ export function StatCard({
     </article>
   );
 }
-export function EmptyState({ children }: { children: ReactNode }) {
+export function EmptyState({ children, action }: { children: ReactNode; action?: ReactNode }) {
   return (
     <div className="empty-state">
-      <Check size={26} />
+      <Search size={26} aria-hidden="true" />
       <p>{children}</p>
+      {action}
     </div>
   );
 }

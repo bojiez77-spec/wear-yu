@@ -30,6 +30,8 @@ export default function Layout() {
   }, [location.pathname]);
   useEffect(() => {
     if (!open) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
     closeButton.current?.focus();
     function onKey(event: KeyboardEvent) {
       if (event.key === "Escape") {
@@ -57,6 +59,10 @@ export default function Layout() {
     document.addEventListener("keydown", onKey);
     window.addEventListener("resize", onResize);
     return () => {
+      document.body.style.overflow = previousOverflow;
+      if (document.activeElement?.closest("#sidebar")) {
+        menuButton.current?.focus();
+      }
       document.removeEventListener("keydown", onKey);
       window.removeEventListener("resize", onResize);
     };
@@ -119,7 +125,10 @@ export default function Layout() {
               key={to}
               to={to}
               end={to === "/"}
-              onClick={() => setOpen(false)}
+              onClick={() => {
+                setOpen(false);
+                if (to === location.pathname) menuButton.current?.focus();
+              }}
             >
               <Icon size={19} />
               <span>

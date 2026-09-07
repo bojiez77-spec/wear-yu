@@ -90,7 +90,7 @@ export default function Sourcing({
             </button>
           ))}
         </div>
-        <span className="subtle">
+        <span className="subtle" role="status">
           {onlySaved ? "收藏" : "候選"} · {filtered.length} 件商品
         </span>
       </div>
@@ -139,7 +139,13 @@ export default function Sourcing({
         ))}
       </div>
       {filtered.length === 0 && (
-        <EmptyState>沒有符合條件的商品，試試其他關鍵字或分類。</EmptyState>
+        <EmptyState action={
+          <button className="gold-button" onClick={() => {
+            setQuery("");
+            setCategory("全部商品");
+            setOnlySaved(false);
+          }}>清除篩選，瀏覽全部商品</button>
+        }>沒有符合條件的商品，試試其他關鍵字或分類。</EmptyState>
       )}
       <p className="page-note">
         商品、售價、毛利與分數皆為模擬資料。收藏於本次使用保留。

@@ -1518,6 +1518,7 @@ main {
   .sidebar.is-open {
     transform: translateX(0);
     visibility: visible;
+    overscroll-behavior: contain;
   }
   .mobile-close {
     display: grid;
