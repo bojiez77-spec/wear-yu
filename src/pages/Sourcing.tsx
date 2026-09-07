@@ -44,7 +44,10 @@ export default function Sourcing({
       <section className="collection-banner">
         <div>
           <p className="eyebrow">THE AUTUMN COLLECTION / 2026</p>
-          <h2>質感日常，從細節開始。</h2>
+          <h2>
+            <span>質感日常，</span>
+            <span>從細節開始。</span>
+          </h2>
           <p>低飽和色系 · 舒適剪裁 · 經得起時間的選擇</p>
         </div>
         <span className="collection-number">

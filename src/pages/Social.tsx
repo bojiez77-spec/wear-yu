@@ -80,7 +80,9 @@ export default function Social({
         </div>
         <span className="subtle">{filtered.length} 則內容</span>
       </div>
-      <div className="post-grid">
+      <div
+        className={`post-grid ${filter === "全部內容" ? "post-grid-editorial" : ""}`}
+      >
         {filtered.map((post, index) => (
           <article className="panel post-card" key={post.id}>
             <div className={`post-art post-art-${post.id}`}>

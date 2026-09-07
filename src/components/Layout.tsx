@@ -6,9 +6,7 @@ import {
   LayoutDashboard,
   Menu,
   MessageCircle,
-  PanelLeftClose,
   ShoppingBag,
-  Sparkles,
   X,
 } from "lucide-react";
 
@@ -88,11 +86,8 @@ export default function Layout() {
       )}
       <aside className={`sidebar ${open ? "is-open" : ""}`} id="sidebar">
         <div className="brand">
-          <div className="brand-mark">
-            W<span>Y</span>
-          </div>
           <div>
-            <strong>WEAR-YU</strong>
+            <strong>wear.yu</strong>
             <small>GM COMMAND CENTER</small>
           </div>
           <button
@@ -137,7 +132,6 @@ export default function Layout() {
         </nav>
         <div className="sidebar-bottom">
           <div className="studio-note">
-            <Sparkles size={19} />
             <p>讓好品味，成為好生意。</p>
             <small>Thoughtfully curated. Beautifully run.</small>
           </div>
@@ -147,7 +141,6 @@ export default function Layout() {
               <strong>品牌主理人</strong>
               <small>General Manager</small>
             </div>
-            <PanelLeftClose size={17} />
           </div>
         </div>
       </aside>

@@ -69,20 +69,19 @@ export default function Dashboard({
           <div className="welcome-kicker">
             <span className="short-rule" /> THE ART OF RUNNING A BRAND
           </div>
-          <h2>專注品味，其餘井然有序。</h2>
+          <h2>
+            <span>專注品味，</span>
+            <span>其餘井然有序。</span>
+          </h2>
           <p>程式、社群、選品。你的品牌日常，在這裡串起。</p>
           <Link className="text-link" to="/sourcing">
             探索本季選品 <ArrowRight size={15} />
           </Link>
         </div>
         <div className="welcome-art" aria-hidden="true">
-          <span className="orbit orbit-one" />
-          <span className="orbit orbit-two" />
-          <span className="orbit orbit-three" />
-          <span className="art-monogram">
-            W<span>Y</span>
-          </span>
-          <span className="art-label">CURATED WITH INTENTION</span>
+          <span className="edition-label">THE STUDIO JOURNAL</span>
+          <span className="art-wordmark">wear.yu</span>
+          <span className="art-label">AUTUMN 2026 — VOL. 01</span>
         </div>
       </section>
       <div className="section-toolbar">
