@@ -6,7 +6,7 @@ Source: supplier/store screenshots supplied directly by Chairman during 2026-09-
 
 The full screenshot set supplied in this batch is classified by Chairman as **優質店家 / Priority Supplier Pool** for Wear-Yu sourcing. Codex and the sourcing team should search these stores first when looking for suitable merchandise.
 
-Important control: `優質店家` is a sourcing-priority classification, not proof that every item is authentic, available, profitable, or an exact FREAK'S STORE SKU. Exact product evidence is still mandatory before approval/listing.
+Important control: `優質店家` is a sourcing-priority classification, not proof that every item is authentic, available, profitable, or suitable for listing. Actual supplier-item evidence is still mandatory before approval/listing.
 
 ## Confirmed screenshot manifest currently registered
 
@@ -19,13 +19,13 @@ Important control: `優質店家` is a sourcing-priority classification, not pro
 | IMG_0103.jpeg | search `9090` | GT罐头外贸综合店 原GTAT | Priority supplier. |
 | IMG_0104.jpeg | search `9090牛仔裤` | GTAT context | Priority supplier product-grid evidence. |
 | IMG_0105.jpeg | search `衬衫` | 洋气土土日系服饰 | Priority supplier. |
-| IMG_0106.jpeg | search `日单短裤` | 洋气土土日系服饰 context | Priority supplier; visible FS-labelled listing is only a discovery signal pending exact-SKU verification. |
+| IMG_0106.jpeg | search `日单短裤` | 洋气土土日系服饰 context | Priority supplier; visible FS-labelled listing is a discovery signal pending actual supplier-item verification. |
 | IMG_0107.jpeg | search `短袖` | 老黄日系潮牌服装店 | Priority supplier; member account `tb590292577` visible. |
 | IMG_0108(1).jpeg | search `solotex` | 老黄日系潮牌服装店 context | Priority supplier product-grid evidence. |
 | IMG_0119.jpeg | search `searoom` | DawanzI 大丸子酱 | Priority supplier; store-home screenshot. |
 | IMG_0120.jpeg | search `日单连衣裙` | DAWANZI / 大丸子酱 context | Priority supplier product-grid evidence. |
 | IMG_0121.jpeg | search `fs短袖` | Ten Percent 百分之十 | Priority supplier; store-home screenshot. |
-| IMG_0122.jpeg | search `日单短袖` | Ten Percent 百分之十 context | Priority supplier product-grid evidence; FS-labelled listings require exact-SKU verification. |
+| IMG_0122.jpeg | search `日单短袖` | Ten Percent 百分之十 context | Priority supplier product-grid evidence; FS-labelled listings still require actual supplier-item verification. |
 | IMG_0123.jpeg | search `衬衫` | 万达外贸服装 批发零售 | Priority supplier; store-home screenshot. |
 | IMG_0124.jpeg | search `k8f` | 万达外贸服装 context | Priority supplier product-grid evidence. |
 | IMG_0125.jpeg | search `裤子` | 哒哒哒家 | Priority supplier; store hot-selling screenshot. |
@@ -37,12 +37,12 @@ The Chairman described the complete set as **28 screenshots**. The manifest abov
 
 1. Treat Chairman-designated stores in this screenshot set as the **first-priority Taobao sourcing pool** before broad/random store discovery.
 2. Do not limit sourcing exclusively to these stores if no compliant/competitive product can be found; keep the sourcing line moving while preserving priority order.
-3. A store screenshot proves only that Chairman designated the store as a preferred sourcing lead. Before GM approval, verify actual Taobao item URL, exact supplier SKU/variant, exact-SKU product images, current purchase price, colors, sizes, inventory/availability and evidence timestamp.
-4. `FS`, `FREAKS STORE`, `freaks store`, or other brand-like text in a Taobao listing/search is a discovery signal only. Cross-check with official/credible product evidence before identifying the item as FREAK'S STORE.
-5. Never use a similar/reference product image as the formal approval image. Chairman/GM approval material requires an image confirmed to the same SKU/item.
+3. Before GM approval, verify the actual Taobao item URL where obtainable, supplier item/variant identifier where available, product images matching the actual supplier item, current purchase price, colors, sizes, inventory/availability and evidence timestamp.
+4. `FS`, `FREAKS STORE`, `freaks store`, or other brand-like text in a Taobao listing/search is a discovery signal. Official FREAK'S STORE exact-SKU verification is not a mandatory Shopee Excel Gate; do not add unsupported authenticity/authorization claims.
+5. Never use a merely similar/reference product image as the formal approval image. Chairman/GM approval material requires an image confirmed to the actual supplier item/variant being sold.
 6. Finance Gate remains BLOCK until actual acquisition cost plus overseas payment/card fee, cross-border/consolidation freight and actual applicable Shopee fees support the current minimum >=65% net profit margin.
 7. Preserve supplier evidence and source traceability in the sourcing manifest used by the Wear-Yu application/Codex workflow.
-8. If a screenshot or product cannot be mapped to a live source, mark it `UNVERIFIED`/`MISSING`; never fabricate URL, SKU, inventory, cost, brand or image evidence.
+8. If a screenshot or product cannot be mapped to a live source, mark it `UNVERIFIED`/`MISSING`; never fabricate URL, supplier identifier, inventory, cost, brand or image evidence.
 9. GM-approved products A and B remain active execution cases and may not be returned to the candidate pool merely because sourcing evidence is incomplete.
 10. New candidate sourcing must continue in parallel with approved-product follow-up.
 
