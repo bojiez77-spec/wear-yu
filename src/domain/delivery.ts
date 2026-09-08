@@ -22,7 +22,7 @@ export function productErrors(value: unknown): string[] {
   const p = value as VerifiedProduct; const errors: string[] = [];
   for (const key of ['sku', 'variantSku', 'title', 'color', 'size', 'description', 'verifiedBy'] as const) if (!nonempty(p[key])) errors.push(`${key} 未驗證`);
   if (!validUrl(p.sourceUrl) || !validUrl(p.evidenceUrl)) errors.push('來源與驗證證據需為 HTTPS 網址');
-  if (!Array.isArray(p.imageUrls) || !p.imageUrls.length || !p.imageUrls.every(validUrl)) errors.push('缺 exact-SKU 圖片');
+  if (!Array.isArray(p.imageUrls) || !p.imageUrls.length || !p.imageUrls.every(validUrl)) errors.push('缺實際販售商品圖片');
   if (!nonempty(p.verifiedAt) || !Number.isFinite(Date.parse(p.verifiedAt))) errors.push('缺驗證時間');
   if (!Number.isInteger(p.inventory) || p.inventory < 0) errors.push('庫存未驗證');
   const costs = ['purchaseCost', 'cardFee', 'freight', 'shopeeFixedFee', 'shopeeRate', 'price', 'minimumMargin'] as const;
