@@ -114,3 +114,12 @@ it.runIf(!!process.env.SHOPEE_TEMPLATE_PATH)('preserves every original template 
   expect(xml).toContain('r="M7"><v>500</v>');
   expect(xml).toContain('TEST-BLUE-M');
 });
+
+it('accepts supplier data without official brand SKU/page, authenticity or Taobao login', async () => {
+  const supplier = { ...packet.products[0], sku: 'WY-INTERNAL-1', variantSku: 'WY-INTERNAL-1-M' };
+  expect(productErrors(supplier)).toEqual([]);
+  await expect(listingWorkbook([supplier], await fixtureTemplate())).resolves.toBeInstanceOf(Uint8Array);
+  for (const patch of [{ sourceUrl: '' }, { imageUrls: [] }, { size: '' }, { inventory: undefined }, { purchaseCost: undefined }, { freight: undefined }, { price: 499 }]) {
+    expect(productErrors({ ...supplier, ...patch }).length).toBeGreaterThan(0);
+  }
+});

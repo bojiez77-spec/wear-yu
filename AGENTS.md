@@ -66,13 +66,13 @@ B. FREAK'S STORE Short Length Hoodie Knit — Chairman approved on 2026-09-07.
 Rules:
 - A and B must never return to the candidate pool and must not wait for a batch of three products.
 - Continue new-candidate sourcing while completing approved-product data. Approved-product follow-up must not stop the sourcing pipeline.
-- For each active product verify, where applicable: actual source, exact SKU/product code, exact-SKU official/product images, acquisition cost, Wear-Yu pricing, colors, sizes, inventory, listing assets/data, and actual listing status.
+- For each active product verify, where applicable: traceable actual source, internal/supplier item identifiers, images matching the actual item being sold, acquisition cost, Wear-Yu pricing, colors, sizes, inventory, listing assets/data, and actual listing status.
 - Missing fields must be explicitly reported.
-- Product approval packages must include exact product images. Never present a similar/reference image as the official approval image when the exact SKU has not been confirmed.
-- If a Chairman-approved product is not followed through, classify responsibility explicitly as "選貨組缺失" and place it under Audit tracking.
+- Product approval packages must include images matching the actual supplier item. Reference images must be labelled and cannot substitute for actual-item listing images. Official brand SKU/page/authenticity verification is optional reference, never an Excel Gate; do not make unsupported brand claims.
+- Audit assigns responsibility by evidence: Information/Engineering owns policy/system gate inflation and conflicting rules; sourcing owns failure to switch to executable traceable sources after login failure. Do not assign every incomplete follow-up solely to sourcing.
 - Do not fabricate supplier cost. Official retail price is not automatically Wear-Yu acquisition cost.
 - Do not force candidates merely to reach a target count. Quality and verification override quota filling.
-- Product names containing "FS" may indicate FREAK'S STORE and should be actively checked, but brand identity must still be verified.
+- Product names containing "FS" are discovery signals only. Verify any brand claim actually made; no official brand/authenticity claim is required for Excel.
 - Current sourcing focus is primarily Taobao suppliers unless a newer Chairman instruction changes the sourcing channel.
 
 ## 8. Finance / final pricing gate
@@ -165,7 +165,7 @@ Never invent status, SKU, inventory, costs, fees, margins, metrics, tests, commi
 ## 13. Chairman policy update — 2026-09-07
 This specific authority split supersedes any earlier blanket final-approval wording:
 - GM approval of a verified product batch authorizes Codex to generate the batch's Shopee Excel and deliver it for manual upload in Shopee Seller Centre immediately. Do not request another Chairman approval for the same product revision. Product work must not wait for social content readiness.
-- Verify exact SKU, supplier cost, payment fee, freight, percentage/fixed Shopee fees, minimum net margin >=65%, exact-SKU images, inventory, sizes, listing fields and evidence before export. Never fill missing inputs with guesses. Respect the supplied Shopee template and its required/conditional fields; retain its metadata and sheets. Do not publish a shop-specific template or actual product packet into this public repository.
+- Verify internal product/variant identifiers, supplier cost, payment fee, freight, percentage/fixed Shopee fees, minimum net margin >=65%, actual-item images, inventory, sizes, listing fields and evidence before export. Never fill missing inputs with guesses. Respect the supplied Shopee template and its required/conditional fields; retain its metadata and sheets. Do not publish a shop-specific template or actual product packet into this public repository.
 - Social content completes internal review, then receives Chairman final release. Release immediately creates platform-specific publication jobs; only actual provider PUBLISHED evidence completes publication. Approval, queued, BLOCK, PENDING and Excel download are not publication/listing completion.
 - Chairman return requires a nonblank reason, structured defect category and responsible department. Route correction to that department under GM tracking. Social return preserves already-approved product data and Excel authority; changed product data requires a new product revision/batch review, never silently reuse approval.
 - The second accepted occurrence of the same defect category in the same department (including across cases) automatically involves Audit. Record category, count, department, root cause, corrective and preventive actions, review state and review evidence. Repeated defects cannot be closed through a one-click resolve action. Retain original decisions/findings after remediation.
@@ -182,4 +182,13 @@ This specific authority split supersedes any earlier blanket final-approval word
 - Before generating or modifying a Shopee bulk-upload workbook, Codex MUST read `docs/ROUND01_STRICT_OFFICIAL_RECOVERY_PROCESS.md` in addition to this file.
 - That document records the recoverable process that produced `wear_yu_Round01_AUTO_V1_4_STRICT_OFFICIAL_RECOVERY.xlsx`: sourcing -> Master Data -> official Basic Template mapping -> category/leaf-node corrections -> Cloudinary size-chart Secure URLs -> 14-day fulfillment policy -> AUTO V1 experiments -> strict restoration of the official workbook structure.
 - Reuse the controls and validation sequence, not the historical Round01 prices or unverified historical product claims.
-- The durable rule is: use the current official Shopee workbook as the mother template, write verified data into it, preserve official/hidden/reference sheets and field order, BLOCK unknown mandatory values, validate exact-SKU images/URLs/SKUs/categories/finance before export, and keep `Excel Ready` separate from actual Shopee listing status.
+- The durable rule is: use the current official Shopee workbook as the mother template, write verified data into it, preserve official/hidden/reference sheets and field order, BLOCK unknown mandatory values, validate actual-item images/URLs/SKUs/categories/finance before export, and keep `Excel Ready` separate from actual Shopee listing status.
+
+## 16. Chairman-approved GM/Audit repair — 2026-09-09
+- This section and the 2026-09-08 Shopee policy supersede conflicting historical wording. Official FREAK’S STORE exact SKU, exact official product page and authenticity verification are optional references, not sourcing-start or Shopee Excel Gates.
+- Taobao authenticated LOGIN PASS / Browser-First is a data-quality enhancement / preferred channel only. Login failure must not stop candidate creation or otherwise eligible Excel.
+- Continue from the Chairman’s 28-screenshot priority pool (only concretely mapped files may be claimed), existing supplier records, public indexes and other traceable sources. Record available evidence and explicit null/missing fields at candidate stage; do not require an export-ready packet to create candidates.
+- Restore: priority supplier pool -> candidate -> available traceable source/images/price/specs -> Master Data -> Finance Gate -> GM approval -> official Shopee Excel -> manual upload.
+- A/B retain their approved status. Exact-item search is capped at two working cycles, then switch to purchasable sources in the approved style direction while retaining the original sourcing exception. Do not reset the search counter or invent completed cycles; changed sellable-item data needs GM review, not reversal of A/B approval.
+- Actual export BLOCKs: fabricated/unverified costs/specs/stock/URLs; images not corresponding to the actual sellable item; missing required Shopee data; incomplete cost inputs or net margin below 65%; missing GM approval. Keep historical reference prices separate from verified purchase costs.
+- New batches/candidates may proceed while older batches have open evidence gaps. Never count a candidate as Finance PASS, Excel Ready or Listed.

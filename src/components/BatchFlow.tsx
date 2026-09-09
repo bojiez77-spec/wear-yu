@@ -5,9 +5,8 @@ import { DefectFields, BatchDelivery, BatchEvidence } from './Delivery';
 import { gateDefinitions, type Batch, type DefectType } from '../domain/operations';
 
 export function StartBatch() {
-  const { state, demo, dispatch } = useOperations();
-  const active = state.batches.some(b => b.status !== '已放行');
-  return <div className="batch-launch"><button className="gold-button" disabled={active} onClick={() => dispatch({ type: 'launch', id: crypto.randomUUID(), demo })}><Play size={16} />{active ? '本批次處理中' : '發起新批次選品'}</button><span>{demo ? '示範模式 · 自動演練制度，不會實際找貨或製作素材' : '一次下令，由 GM 工作佇列依制度承接'}</span></div>;
+  const { demo, dispatch } = useOperations();
+  return <div className="batch-launch"><button className="gold-button" onClick={() => dispatch({ type: 'launch', id: crypto.randomUUID(), demo })}><Play size={16} />發起新批次選品</button><span>{demo ? '示範模式 · 自動演練制度，不會實際找貨或製作素材' : '一次下令，由 GM 工作佇列依制度承接'}</span></div>;
 }
 export function BatchFlow({ batch }: { batch: Batch }) {
   return <section className="batch-flow ops-section"><div className="panel-heading"><h2>{batch.name}</h2><span className="batch-state">{batch.status}{batch.mode === 'demo' ? ' · 演練' : ''}</span></div>

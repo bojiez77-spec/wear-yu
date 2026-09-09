@@ -66,3 +66,6 @@ The Chairman described the complete set as **28 screenshots**. The manifest abov
 - IMG_0124.jpeg
 - IMG_0125.jpeg
 - IMG_0126.jpeg
+
+## 2026-09-09 execution correction
+Candidate creation must continue without authenticated LOGIN PASS. Use available screenshot evidence, existing supplier records and public indexes; retain source filename/grid location, observation date, price type and explicit missing fields. Historical screenshot/member prices are not verified current acquisition costs. The 28 declared / 18 mapped distinction above remains unchanged. Finance and Excel Gates apply at export readiness, not discovery. A/B stay approved; cap exact-item search at two working cycles, then seek purchasable alternatives in the approved direction and preserve the original exception.

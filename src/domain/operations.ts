@@ -15,15 +15,15 @@ export type Audit = { id: string; caseId: string; title: string; finding: string
 export type Workspace = { batches: Batch[]; cases: WorkCase[]; decisions: Decision[]; audits: Audit[] };
 export const emptyWorkspace = (): Workspace => ({ batches: [], cases: [], decisions: [], audits: [] });
 export const stepLabels: Record<Kind, string[]> = {
-  選品款式: ['淘寶找款', '商品與來源核實', '搭配評估'],
+  選品款式: ['優質店家與可追溯來源找款', '商品與來源核實', '搭配評估'],
   社群內容: ['熱門樣式與文案查核', '品牌原創製作', '加入好友引導'],
   穿搭短影片: ['熱門穿搭參考', '原創拍攝剪輯', '商品一致性確認'],
   穿搭示意圖: ['熱門搭配參考', '品牌示意圖製作', '商品一致性確認'],
 };
 export const sourceBriefs: Record<Team, { summary: string; rules: string[] }> = {
   選品組: {
-    summary: '淘寶找貨 · 核實款式與採購成本',
-    rules: ['保存淘寶商品連結、店鋪與確切 SKU，核對顏色、尺寸、庫存及實際採購成本。', '參考圖與商品原圖分開；熱門程度不能取代查重、氣候適配與財務查核。'],
+    summary: '優質店家優先 · 可追溯來源持續選品',
+    rules: ['淘寶登入是優先資料管道，並非啟動或 Excel 必要條件；受阻時使用董事長店家截圖、既有供應資料及公開索引建立候選，缺口明確保留。', '官方品牌 SKU／商品頁／正品驗證僅供參考；Excel 仍需實際販售商品對應圖片、可追溯來源、必填規格庫存與完整成本後淨利率至少 65%。'],
   },
   視覺組: {
     summary: '近期熱門穿搭與文案 → Wear-Yu 原創內容',
@@ -67,7 +67,7 @@ function baseReducer(state: Workspace, action: Operation): Workspace {
     } catch { return state; }
   }
   if (action.type === 'launch') {
-    if (state.batches.some(b => b.status !== '已放行')) return state;
+    if (!action.id.trim() || state.batches.some(b => b.id === action.id)) return state;
     const next = createBatch(action.id, state.batches.length + 1, action.demo);
     return { ...state, batches: [...state.batches, next.batch], cases: [...state.cases, ...next.cases] };
   }
@@ -157,7 +157,7 @@ export type Batch = { id: string; name: string; mode: 'live' | 'demo'; gate: num
 export function createBatch(id: string, number: number, demo: boolean): { batch: Batch; cases: WorkCase[] } {
   const name = `第 ${String(number).padStart(2, '0')} 批次`;
   const definitions: { suffix: string; kind: Kind; title: string; detail: string }[] = [
-    { suffix: 's', kind: '選品款式', title: '淘寶候選款式搜尋', detail: '淘寶找貨、查重與來源核實；符合氣候，至少一件短袖，不硬湊候選。' },
+    { suffix: 's', kind: '選品款式', title: '可追溯來源候選搜尋', detail: '優質店家、既有供應資料及公開索引找貨、查重與來源核實；符合氣候，至少一件短袖，不硬湊候選。' },
     { suffix: 'social', kind: '社群內容', title: '社群與好友引導', detail: '參考近期熱門樣式與文案，轉成品牌原創內容，吸引停留與加入好友。' },
     { suffix: 'video', kind: '穿搭短影片', title: '上架前穿搭短影片', detail: '候選成熟後，參考熱門穿搭節奏，原創製作符合實際商品的短片。' },
     { suffix: 'image', kind: '穿搭示意圖', title: '搭配圖與尺寸表', detail: '參考熱門搭配呈現，依實際商品製作示意圖與尺寸資料。' },

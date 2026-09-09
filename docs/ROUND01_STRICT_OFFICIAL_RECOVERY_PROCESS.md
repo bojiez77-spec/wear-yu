@@ -325,7 +325,7 @@ GM 核准＋Codex 產生可上傳 Excel，只能認列「Excel Ready」。人工
 - Shopee Excel 由人員人工上傳，不要求 Shopee API
 - 社群則由董事長最終放行，PUBLISHED 才算完成
 - 重複缺失須升級稽核/CAPA
-- 淘寶優質店家池優先選品，但仍要逐商品驗證 exact SKU / 圖片 / 成本 / 庫存
+- 淘寶優質店家池優先選品，但仍要逐商品驗證 供應商商品識別 / 實際販售圖片 / 成本 / 庫存（不要求官方品牌 SKU）
 
 ---
 
@@ -339,10 +339,12 @@ GM 核准＋Codex 產生可上傳 Excel，只能認列「Excel Ready」。人工
 4. 讀 GM 已批准批次的 Master Data。
 5. 執行 Preflight；缺值就 BLOCK，不猜。
 6. 通過 Finance Gate 後才寫最終售價。
-7. 使用 exact-SKU 圖片與可公開 HTTPS URL。
+7. 使用 實際販售商品對應圖片與可公開 HTTPS URL。
 8. 尺寸表優先使用 Cloudinary Secure URL。
 9. 只改資料區，不破壞官方工作表、隱藏表、欄位順序與格式。
 10. 匯出後做結構、必填欄、SKU、URL、資料型態與錯誤掃描。
 11. 回報 `Excel Ready`，等待人工 Shopee 上傳回執；不得假稱已上架。
 
 這是 Round01 `AUTO_V1_4_STRICT_OFFICIAL_RECOVERY` 應保留下來的核心價值。
+
+2026-09-09 澄清：本文的 SKU 是內部／供應商商品與規格識別，不是官方 FREAK’S STORE exact SKU。官方商品頁、正品驗證與淘寶 LOGIN PASS 均非選品啟動或 Excel 必要 Gate。候選可先保存可追溯來源與缺口，資料齊備後才經 Finance、GM 與官方模板輸出。

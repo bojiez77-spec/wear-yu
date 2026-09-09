@@ -3,10 +3,10 @@
 Chairman approved. Effective immediately.
 
 ## Objective
-Stop relying on public web search as the primary method for Taobao item discovery. Use an authenticated Taobao browser session as the preferred sourcing channel, starting from the Chairman-designated priority supplier pool.
+Use authenticated Taobao browsing as a preferred data-quality enhancement, starting from the Chairman-designated priority supplier pool. LOGIN PASS is not a mandatory sourcing-start or Excel Gate. When unavailable, immediately continue from Chairman screenshots, existing supplier records, public indexes and other traceable sources; record missing fields rather than stopping candidate creation.
 
 ## Operating chain
-Priority supplier pool -> authenticated Taobao store browsing -> actual Taobao item record -> sourcing record -> Finance Gate -> GM approval -> Codex Shopee Excel -> manual Seller Centre upload.
+Priority supplier pool -> candidate -> available traceable source/images/price/specs -> Master Data -> Finance Gate -> GM approval -> official Shopee Excel -> manual Seller Centre upload. Candidate creation accepts incomplete evidence; final export requires verified mandatory data and complete costs.
 
 For each actual supplier item capture, when available/required: store name, Taobao item ID, item URL, supplier product images, RMB purchase price, variants/colors/sizes, supply/stock status, evidence timestamp and source status.
 

@@ -6,7 +6,7 @@ describe('batch company policy', () => {
   it('does not simulate execution in actual mode or launch concurrent duplicates', () => {
     const state = launch(false);
     expect(reduce(state, { type: 'advance', id: 'b1' })).toBe(state);
-    expect(reduce(state, { type: 'launch', id: 'b2', demo: false })).toBe(state);
+    expect(reduce(state, { type: 'launch', id: 'b1', demo: false })).toBe(state);
     expect(state.cases).toHaveLength(4);
     expect(state.cases.every(c => c.steps.every(s => !s.done))).toBe(true);
   });
@@ -40,4 +40,13 @@ describe('batch company policy', () => {
     state = reduce(state, { type: 'capa', id: 'finding-issue', rootCause: '交接漏件', corrective: '補齊', preventive: '檢查清單', review: 'PASS', evidence: '稽核人複查完成' });
     expect(reduce(state, { type: 'batch-gm', id: 'b1', result: '放行', reason: '' }).batches[0].status).toBe('待董事長核決');
   });
+});
+
+it('continues new sourcing batches while an earlier case is incomplete', () => {
+  const state = launch(false);
+  const next = reduce(state, { type: 'launch', id: 'b2', demo: false });
+  expect(next.batches).toHaveLength(2);
+  expect(next.batches[0]).toEqual(state.batches[0]);
+  expect(next.cases).toHaveLength(8);
+  expect(next.batches.every(b => !b.gmApproved)).toBe(true);
 });
