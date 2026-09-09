@@ -202,3 +202,11 @@ textarea:focus-visible, summary:focus-visible { outline: 2px solid var(--gold); 
  .batch-browser-row strong { font-size: 14px; }
  .batch-pagination .quiet-button { padding: 10px; }
 }
+
+.candidate-followup { margin-top: 16px; }
+.followup-fields { border: 0; padding: 0; min-width: 0; }
+.followup-fields details { padding: 10px 0; }
+.followup-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 12px; margin: 12px 0; }
+.followup-grid label { display: grid; gap: 6px; min-width: 0; }
+.followup-grid textarea, .followup-grid select { box-sizing: border-box; width: 100%; max-width: 100%; font: inherit; padding: 8px; }
+.followup-submit { margin: 16px 0; }

@@ -24,6 +24,7 @@ export function OperationsProvider({ children }: { children: ReactNode }) {
   const dispatch = (action: Operation): boolean => {
     if (demo) { setExamples(state => operationsReducer(state, action)); return true; }
     const next = operationsReducer(liveRef.current, action);
+    if (next === liveRef.current) return false;
     try {
       localStorage.setItem('wear-yu-operations-v2', JSON.stringify(next));
       liveRef.current = next; setLive(next); setStorageError(''); return true;

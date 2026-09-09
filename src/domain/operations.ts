@@ -1,5 +1,6 @@
 import { selectCandidates, recordKey, type SupplierRecord, type SourcingRun } from './sourcing';
 import { parsePacket, type DeliveryPacket } from './delivery';
+import { followupPacket, type CandidateWork } from './followup';
 export type Team = '選品組' | '視覺組';
 export type Stage = '待接通' | '等待前關' | '進行中' | '待審批' | '已放行' | '已退回';
 export type Kind = '選品款式' | '社群內容' | '穿搭短影片' | '穿搭示意圖';
@@ -37,6 +38,8 @@ export type Operation =
   | { type: 'launch'; id: string; demo: boolean; time?: string }
   | { type: 'supplier-import'; records: SupplierRecord[] }
   | { type: 'source-run'; id: string; time: string }
+  | { type: 'candidate-save'; id: string; candidateId: string; work: CandidateWork }
+  | { type: 'followup-submit'; id: string }
   | { type: 'packet'; id: string; text: string }
   | { type: 'excel'; id: string; filename: string }
   | { type: 'capa'; id: string; rootCause: string; corrective: string; preventive: string; review: Capa['review']; evidence: string }
@@ -56,6 +59,18 @@ function baseReducer(state: Workspace, action: Operation): Workspace {
     return { ...state, supplierPool: pool };
   }
   if (action.type === 'source-run') return runSourcing(state, action.id, action.time);
+  if (action.type === 'candidate-save' || action.type === 'followup-submit') {
+    const batch = state.batches.find(b => b.id === action.id);
+    if (!batch || batch.mode !== 'live' || batch.gmApproved || batch.packet) return state;
+    if (action.type === 'candidate-save') {
+      if (!batch.sourcingRun?.candidates.some(r => r.id === action.candidateId) || !action.work.variants.length || !Number.isFinite(Date.parse(action.work.savedAt))) return state;
+      return { ...state, batches: state.batches.map(b => b.id === batch.id ? { ...b, candidateWork: { ...b.candidateWork, [action.candidateId]: action.work } } : b) };
+    }
+    try {
+      const packet = followupPacket(batch.sourcingRun?.candidates || [], batch.candidateWork);
+      return baseReducer(state, { type: 'packet', id: batch.id, text: JSON.stringify(packet) });
+    } catch { return state; }
+  }
   if (action.type === 'capa') {
     if (!action.rootCause.trim() || !action.corrective.trim() || !action.preventive.trim() || (action.review === 'PASS' && !action.evidence.trim())) return state;
     return { ...state, audits: state.audits.map(a => a.id === action.id && a.capa ? { ...a, resolved: action.review === 'PASS', capa: { ...a.capa, rootCause: action.rootCause.trim(), corrective: action.corrective.trim(), preventive: action.preventive.trim(), review: action.review, evidence: action.evidence.trim() } } : a) };
@@ -163,7 +178,7 @@ export const gateDefinitions = [
   { name: '必要稽核', owner: '稽核組' },
   { name: 'GM 最終審核', owner: '總經理' },
 ] as const;
-export type Batch = { sourcingRun?: SourcingRun; id: string; name: string; mode: 'live' | 'demo'; gate: number; status: '待接通' | '執行中' | '待 GM 審核' | '待董事長核決' | '已放行' | 'GM 改善中'; reason: string; events: string[]; packet?: DeliveryPacket; gmApproved?: boolean; listingStatus?: 'READY' | 'EXCEL_READY' | 'BLOCK'; publishJobs?: { id: string; platform: 'instagram' | 'threads'; status: 'BLOCK'; reason: string; payload: NonNullable<DeliveryPacket['social']> }[]; socialStatus?: 'REVIEW' | 'RETURNED' | 'BLOCK' | 'PENDING' | 'PUBLISHED' };
+export type Batch = { candidateWork?: Record<string, CandidateWork>; sourcingRun?: SourcingRun; id: string; name: string; mode: 'live' | 'demo'; gate: number; status: '待接通' | '執行中' | '待 GM 審核' | '待董事長核決' | '已放行' | 'GM 改善中'; reason: string; events: string[]; packet?: DeliveryPacket; gmApproved?: boolean; listingStatus?: 'READY' | 'EXCEL_READY' | 'BLOCK'; publishJobs?: { id: string; platform: 'instagram' | 'threads'; status: 'BLOCK'; reason: string; payload: NonNullable<DeliveryPacket['social']> }[]; socialStatus?: 'REVIEW' | 'RETURNED' | 'BLOCK' | 'PENDING' | 'PUBLISHED' };
 export function createBatch(id: string, number: number, demo: boolean): { batch: Batch; cases: WorkCase[] } {
   const name = `第 ${String(number).padStart(2, '0')} 批次`;
   const definitions: { suffix: string; kind: Kind; title: string; detail: string }[] = [
@@ -173,7 +188,7 @@ export function createBatch(id: string, number: number, demo: boolean): { batch:
     { suffix: 'image', kind: '穿搭示意圖', title: '搭配圖與尺寸表', detail: '參考熱門搭配呈現，依實際商品製作示意圖與尺寸資料。' },
   ];
   return {
-    batch: { id, name, mode: demo ? 'demo' : 'live', gate: 0, status: demo ? '執行中' : '待接通', reason: '', events: [`董事長發起${name}`, 'GM 已建立制度工作佇列', demo ? '示範引擎開始演練' : '開始讀取本機供應資料；製作與發布服務另待接通'] },
+    batch: { id, name, mode: demo ? 'demo' : 'live', gate: 0, status: demo ? '執行中' : '待接通', reason: '', events: [`董事長發起${name}`, '已建立本機作業紀錄；尚無外部接單回執', demo ? '示範引擎開始演練' : '開始讀取本機供應資料；製作與發布服務另待接通'] },
     cases: definitions.map(d => ({ id: `${id}-${d.suffix}`, batchId: id, title: `${name}｜${d.title}`, team: d.kind === '選品款式' ? '選品組' : '視覺組', kind: d.kind, stage: !demo ? '待接通' : d.kind === '選品款式' || d.kind === '社群內容' ? '進行中' : '等待前關', steps: stepLabels[d.kind].map(label => ({ label, done: false })), detail: d.detail, cadence: d.kind === '社群內容' ? '定期發佈規劃' : '依批次制度推進' })),
   };
 }

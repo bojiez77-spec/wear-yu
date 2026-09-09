@@ -30,7 +30,7 @@ export function BatchDelivery({ batch }: { batch: Batch }) {
     <p>社群：{batch.socialStatus === 'BLOCK' ? '董事長已放行 · BLOCK：發布服務未接通' : batch.socialStatus === 'RETURNED' ? '董事長／GM退回 · 待部門修正' : batch.socialStatus || '內部流程中'} · 僅平台 PUBLISHED 算完成</p>
     {batch.mode === 'live' && (!batch.gmApproved || !batch.packet?.social || batch.socialStatus === 'RETURNED') && <label>匯入部門驗證資料（JSON）<input type="file" accept=".json,application/json" onChange={async e => {
       const file = e.target.files?.[0]; if (!file) return;
-      try { const text = await file.text(); const packet = parsePacket(text); if (batch.gmApproved && JSON.stringify(packet.products) !== JSON.stringify(batch.packet?.products)) throw new Error('社群補正不可更動 GM 已批准商品'); dispatch({ type: 'packet', id: batch.id, text }); setNotice('必要欄位及財務計算通過；驗證證據由審核人確認。'); }
+      try { const text = await file.text(); const packet = parsePacket(text); if (batch.gmApproved && JSON.stringify(packet.products) !== JSON.stringify(batch.packet?.products)) throw new Error('社群補正不可更動 GM 已批准商品'); if (!dispatch({ type: 'packet', id: batch.id, text })) throw new Error('資料未保存，請檢查儲存錯誤與批次狀態'); setNotice('必要欄位及財務計算通過；驗證證據由審核人確認。'); }
       catch (error) { setNotice(`BLOCK：${error instanceof Error ? error.message : '資料格式錯誤'}`); }
     }} /></label>}
     <label>蝦皮空白上架範本<input type="file" accept=".xlsx" onChange={async e => { try { const file = e.target.files?.[0]; setTemplate(file ? await file.arrayBuffer() : null); } catch { setNotice("BLOCK：範本讀取失敗"); } }} /></label><button className="gold-button" disabled={!template || !batch.gmApproved || !batch.packet || batch.mode === 'demo' || blocked || busy} onClick={download}>{busy ? '產製中' : '產製／下載上架 Excel'}</button>
