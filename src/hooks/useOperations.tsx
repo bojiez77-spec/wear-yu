@@ -1,7 +1,7 @@
-import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, useRef, type ReactNode } from 'react';
 import { emptyWorkspace, operationsReducer, type Operation, type Workspace } from '../domain/operations';
 
-type Context = { state: Workspace; demo: boolean; toggleDemo: () => void; dispatch: (action: Operation) => void };
+type Context = { state: Workspace; demo: boolean; toggleDemo: () => void; dispatch: (action: Operation) => boolean };
 const OperationsContext = createContext<Context | null>(null);
 export function OperationsProvider({ children }: { children: ReactNode }) {
   const [demo, setDemo] = useState(false);
@@ -11,7 +11,7 @@ export function OperationsProvider({ children }: { children: ReactNode }) {
     } catch { return emptyWorkspace(); }
   });
   const [storageError, setStorageError] = useState('');
-  useEffect(() => { try { localStorage.setItem('wear-yu-operations-v2', JSON.stringify(live)); setStorageError(''); } catch { setStorageError('BLOCK：本機儲存失敗，請勿關閉頁面。'); } }, [live]);
+  const liveRef = useRef(live);
   const [examples, setExamples] = useState(emptyWorkspace);
   useEffect(() => {
     if (!demo) return;
@@ -21,7 +21,17 @@ export function OperationsProvider({ children }: { children: ReactNode }) {
     }), 1800);
     return () => window.clearInterval(timer);
   }, [demo]);
-  const dispatch = (action: Operation) => (demo ? setExamples : setLive)(state => operationsReducer(state, action));
+  const dispatch = (action: Operation): boolean => {
+    if (demo) { setExamples(state => operationsReducer(state, action)); return true; }
+    const next = operationsReducer(liveRef.current, action);
+    try {
+      localStorage.setItem('wear-yu-operations-v2', JSON.stringify(next));
+      liveRef.current = next; setLive(next); setStorageError(''); return true;
+    } catch {
+      setStorageError('儲存空間不足或瀏覽器禁止保存，本次操作未套用。請下載既有供應資料備份，並減少匯入圖片大小。');
+      return false;
+    }
+  };
   return <OperationsContext.Provider value={{ state: demo ? examples : live, demo, toggleDemo: () => setDemo(value => !value), dispatch }}><p className="work-auto-note">本機作業紀錄 · 尚未接通共用資料庫、身分驗證與外部發布服務</p>{storageError && <p role="alert">{storageError}</p>}{children}</OperationsContext.Provider>;
 }
 export function useOperations() {

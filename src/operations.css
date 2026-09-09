@@ -173,3 +173,10 @@ textarea:focus-visible, summary:focus-visible { outline: 2px solid var(--gold); 
 .ops-section input[type="file"] { display: block; max-width: 100%; margin: 8px 0 16px; }
 .audit-row:has(.inline-form) { align-items: start; flex-wrap: wrap; }
 .audit-row > div { min-width: 0; max-width: 100%; }
+
+.sourcing-results { margin: 24px 0; padding: 24px; border: 1px solid var(--border); border-radius: 18px; }
+.sourcing-results p { line-height: 1.8; overflow-wrap: anywhere; }
+.sourcing-candidates { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 16px; margin-top: 18px; }
+.sourcing-candidate { min-width: 0; padding: 16px; border: 1px solid var(--border); border-radius: 12px; }
+.sourcing-candidate img { width: 100%; max-width: 400px; height: auto; }
+.sourcing-candidate summary { cursor: pointer; }

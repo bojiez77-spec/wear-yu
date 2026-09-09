@@ -11,7 +11,7 @@ describe('chairman batch interface', () => {
     expect(document.body.textContent).not.toMatch(/營業額|86,420|新增作業/);
     await user.click(screen.getByRole('button', { name: '發起新批次選品' }));
     expect(screen.getByRole('button', { name: '發起新批次選品' })).toBeEnabled();
-    expect(screen.getByText(/執行服務尚未接通/)).toBeInTheDocument();
+    expect(screen.getByText(/尚無可讀取的供應商品/)).toBeInTheDocument();
     await user.click(screen.getByRole('link', { name: '選品 Sourcing' }));
     expect(screen.getByRole('heading', { name: '第 01 批次｜可追溯來源候選搜尋' })).toBeInTheDocument();
     expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
