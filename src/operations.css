@@ -180,3 +180,25 @@ textarea:focus-visible, summary:focus-visible { outline: 2px solid var(--gold); 
 .sourcing-candidate { min-width: 0; padding: 16px; border: 1px solid var(--border); border-radius: 12px; }
 .sourcing-candidate img { width: 100%; max-width: 400px; height: auto; }
 .sourcing-candidate summary { cursor: pointer; }
+
+.batch-browser { margin: 24px 0; min-width: 0; }
+.batch-browser .panel-heading > span { color: var(--muted); font-size: 12px; }
+.batch-browser-tools { display: grid; grid-template-columns: minmax(0, 1fr) 160px; gap: 14px; margin: 16px 0; }
+.batch-browser-tools label { display: grid; gap: 8px; font-size: 12px; color: var(--muted); }
+.batch-browser-tools input, .batch-browser-tools select { width: 100%; min-width: 0; box-sizing: border-box; padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); color: var(--ink); font: inherit; }
+.batch-browser-row { width: 100%; display: grid; grid-template-columns: minmax(0, 1fr) 100px 75px; gap: 12px; align-items: center; text-align: left; padding: 16px; border: 0; border-bottom: 1px solid var(--line); background: transparent; color: var(--ink); font: inherit; cursor: pointer; }
+.batch-browser-row.selected { background: color-mix(in srgb, var(--blue) 9%, transparent); border-left: 3px solid var(--blue); }
+.batch-browser-row strong, .batch-browser-row small { display: block; overflow-wrap: anywhere; }
+.batch-browser-row small { margin-top: 6px; font-size: 11px; color: var(--muted); }
+.batch-browser-row > span:not(:first-child) { font-size: 12px; }
+.batch-browser-toggle { text-align: right; }
+.batch-pagination { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 16px 0; }
+.batch-pagination span { color: var(--muted); font-size: 12px; }
+.batch-browser-detail { border-top: 1px solid var(--line); padding-top: 8px; }
+.approved-followups summary { cursor: pointer; font-size: 15px; }
+@media (max-width: 600px) {
+ .batch-browser-tools { grid-template-columns: minmax(0, 1fr) 110px; gap: 10px; }
+ .batch-browser-row { grid-template-columns: minmax(0, 1fr) 72px 56px; padding: 14px 8px; gap: 6px; }
+ .batch-browser-row strong { font-size: 14px; }
+ .batch-pagination .quiet-button { padding: 10px; }
+}

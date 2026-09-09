@@ -1,0 +1,30 @@
+import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { expect, it } from 'vitest';
+import { BatchBrowser } from '../components/BatchBrowser';
+import { createBatch } from '../domain/operations';
+
+it('bounds 23 batches to five rows and one detail; pages, searches and filters without losing history', async () => {
+  const batches = Array.from({ length: 23 }, (_, i) => ({ ...createBatch(`batch-${i}`, i + 1, false).batch, ...(i < 3 ? { status: '已放行' as const } : {}) }));
+  const user = userEvent.setup();
+  render(<BatchBrowser batches={batches}>{b => <p data-testid="batch-detail">{b.name}詳細內容</p>}</BatchBrowser>);
+  const browser = screen.getByRole('region', { name: '批次管理' });
+  expect(within(browser).getAllByRole('button', { name: /第 \d+ 批次/ })).toHaveLength(5);
+  expect(screen.getAllByTestId('batch-detail')).toHaveLength(1);
+  expect(screen.getByTestId('batch-detail')).toHaveTextContent('第 23 批次');
+  await user.click(screen.getByRole('button', { name: '下一頁' }));
+  expect(screen.queryByTestId('batch-detail')).not.toBeInTheDocument();
+  await user.click(screen.getByRole('button', { name: /第 18 批次/ }));
+  expect(screen.getByTestId('batch-detail')).toHaveTextContent('第 18 批次');
+  await user.type(screen.getByLabelText('搜尋批次'), '第 01');
+  expect(within(browser).getAllByRole('button', { name: /第 \d+ 批次/ })).toHaveLength(1);
+  await user.click(screen.getByRole('button', { name: /第 01 批次/ }));
+  expect(screen.getByTestId('batch-detail')).toHaveTextContent('第 01 批次');
+  await user.selectOptions(screen.getByLabelText('批次狀態'), '未完成');
+  expect(screen.getByRole('status')).toHaveTextContent('沒有符合條件');
+  expect(screen.queryByTestId('batch-detail')).not.toBeInTheDocument();
+  await user.clear(screen.getByLabelText('搜尋批次'));
+  await user.selectOptions(screen.getByLabelText('批次狀態'), '已放行');
+  expect(within(browser).getAllByRole('button', { name: /第 \d+ 批次/ })).toHaveLength(3);
+  expect(batches).toHaveLength(23);
+});

@@ -44,6 +44,8 @@ describe('real supplier pool execution', () => {
     expect(screen.getByRole('heading', { name: '測試短袖' })).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: '發起新批次選品' }));
     expect(screen.getByText(/現有商品已處理/)).toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: '測試短袖' })).not.toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: /第 01 批次.*查看/ }));
     expect(screen.getAllByRole('heading', { name: '測試短袖' })).toHaveLength(1);
   });
 });
